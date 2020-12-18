@@ -1,0 +1,34 @@
+{{define "settings"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .Title }} - {{ .Version }}</title>
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/css/piggy.css">
+    <link rel="stylesheet" href="/css/settings.css">
+</head>
+<body>
+    <div id="head-banner">
+        <a href="/">
+            <img id="icon" src="/images/icn_piggy.png" />
+        </a>
+        <label id="settings-title">{{ .Settings }}</label>
+    </div>
+    <label style="color:#F00;">/!\ Warning: This page is a work in progress. /!\</label>
+    <table id="settings-table">
+        <tr>
+            <th>{{ .SettingLanguage }}</th>
+            <td>{{ .CurrentLanguage }}</td>
+        </tr>
+        <tr>
+            <th>{{ .SettingServerPort }}</th>
+            <td>{{ .CurrentServerPort }}</td>
+        </tr>
+        <tr>
+            <th>{{ .SettingServerDatabase }}</th>
+            <td>{{ .CurrentServerDatabase}}</td>
+        </tr>
+    </table>
+</body>
+</html>
+{{end}} 

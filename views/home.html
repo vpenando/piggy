@@ -1,0 +1,133 @@
+{{define "home"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .Title }} - {{ .Version }}</title>
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/piggy.css">
+    <script src="/scripts/combobox.js"></script>
+    <script src="/scripts/div.js"></script>
+    <script src="/scripts/image.js"></script>
+    <script src="/scripts/label.js"></script>
+    <script src="/scripts/request.js"></script>
+    <script src="/scripts/table.js"></script>
+</head>
+<body>
+    <div id="head-banner">
+        <a href="/">
+            <img id="icon" src="/images/icn_piggy.png" />
+        </a>
+        <label id="month"></label>
+        <label id="total">{{ .Total }}</label>
+        <div id="buttons">
+            <a id="report" download="report.xlsx"><img class="button" src="/images/btn_download.png"></a>
+            <a id="edit" title="{{ .EditMode }}"><img class="button" src="/images/btn_edit.png"></a>
+            <a id="settings" href="/settings"><img class="button" src="/images/btn_settings.png"></a>
+        </div>
+    </div>
+    <input id="search-bar" placeholder="{{ .Search }}" autofocus />
+    <script src="/scripts/piggy.js"></script>
+    <table id="main-table">
+        <thead>
+            <tr>
+                <th class="table-header" onclick="sortTable(0)">{{ .Category }}</th>
+                <th class="table-header" onclick="sortTable(1)">{{ .Date }}</th>
+                <th class="table-header" onclick="sortTable(2)">{{ .Description }}</th>
+                <th class="table-header" onclick="sortTable(3)">{{ .Amount }}</th>
+                <th class="table-header" onclick="sortTable(4)">{{ .CreationDate }}</th>
+            </tr>
+        </thead>
+        <tbody id="main-table-body" />
+    </table>
+    <script>
+        const date = new Date();
+        const mainTableBody = document.getElementById('main-table-body');
+        const edit = document.getElementById('edit');
+        const report = document.getElementById('report');
+        const monthLabel = document.getElementById('month');
+        const totalLabel = document.getElementById('total');
+        const totalTitle = totalLabel.innerHTML;
+
+        let index = 0;
+        let total = 0;
+        let table = new Table();
+
+        function sortTable(column) {
+            index = 0;
+            table.sortBy(column);
+            fillTable();
+        }
+
+        function formatDateCell(dt) {
+            return ('0' + dt.getDate()).slice(-2) + '/'
+                + ('0' + (dt.getMonth() + 1)).slice(-2) + '/'
+                + dt.getFullYear();
+        }
+
+        function addRow(item) {
+            const row = mainTableBody.insertRow();
+            const categoryCell = row.insertCell(0);
+            const dateCell = row.insertCell(1);
+            const descriptionCell = row.insertCell(2);
+            const amountCell = row.insertCell(3);
+            const creationDateCell = row.insertCell(4);
+
+            if (item.operation.category != 0 && table.categories[item.operation.category]) {
+                const categoryIcon = table.categories[item.operation.category].icon;
+                const categoryName = table.categories[item.operation.category].name || '';
+                categoryCell.innerHTML = new Div([
+                    new Div([new Image(categoryIcon, 'category-icon', new Size(29, 29)).toHTML()], 'category-icon-container').toHTML(),
+                    new Div([new Label(categoryName, 'cell-content').toHTML()], 'category-name-container').toHTML(),
+                ]).toHTML();
+            } else {
+                categoryCell.innerHTML = new Label('', 'cell-content').toHTML();
+            }
+            dateCell.innerHTML = new Label(formatDateCell(item.operation.date), 'cell-content').toHTML();
+            descriptionCell.innerHTML = new Label(item.operation.description, 'cell-content').toHTML();
+            amountCell.innerHTML = (item.operation.amount >= 0)
+                ? new Label('+' + item.operation.amount.toFixed(2) + '€', 'positive-amount-cell-content').toHTML()
+                : new Label(item.operation.amount.toFixed(2) + '€', 'negative-amount-cell-content').toHTML();
+            creationDateCell.innerHTML = new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML();
+            index++;
+        }
+
+        async function onOperationsLoaded() {
+            total = 0;
+            if (table.items && table.items.length > 0) {
+                total = table.items
+                    .map(it => it.operation.amount)
+                    .reduce((x, y) => x + y);
+            }
+            const amount = total.toFixed(2);
+            totalLabel.innerHTML = (total >= 0)
+                ? new Label(totalTitle + ' +' + amount + '€').toHTML()
+                : new Label(totalTitle + ' ' + amount + '€').toHTML();
+        }
+
+        function init() {
+            loadPage();
+            report.href = '/reports?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
+            edit.href = '/edit?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
+        }
+
+        init();
+
+        document.addEventListener('keydown', e => {
+            switch (e.key) {
+            case 'PageUp': 
+                date.setMonth(date.getMonth()+1);
+                break;
+            case 'PageDown': 
+                date.setMonth(date.getMonth()-1);
+                break;
+            default:
+                return;
+            }
+            searchBar.value = '';
+            init();
+        });
+    </script>
+</body>
+</html>
+{{end}}

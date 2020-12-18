@@ -1,0 +1,9 @@
+language: go
+go:
+  - "1.15"
+script:
+  - go build
+  - go vet
+  - cd piggy
+  - go vet
+  - go test -v

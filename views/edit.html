@@ -1,0 +1,244 @@
+{{define "edit"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .Title }} - {{ .Version }}</title>
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/css/edit.css">
+    <link rel="stylesheet" href="/css/piggy.css">
+    <script type="text/javascript" src="/scripts/combobox.js"></script>
+    <script type="text/javascript" src="/scripts/input.js"></script>
+    <script type="text/javascript" src="/scripts/request.js"></script>
+    <script type="text/javascript" src="/scripts/table.js"></script>
+</head>
+<body>
+    <div id="head-banner">
+        <a href="/">
+            <img id="icon" src="/images/icn_piggy.png" />
+        </a>
+        <label id="month"></label>
+        <div id="buttons">
+            <input class="button" type="image" src="/images/btn_save.png" onclick="saveChanges()" title="Enregistrer" />
+            <input class="button" type="image" src="/images/btn_add.png" onclick="addOperation()" title="{{ .TooltipAdd }}" />
+        </div>
+    </div>
+    <div id="add-category-modal" class="new-category-modal-background">
+        <div class="new-category-modal-content">
+            <span class="close-new-category-modal" onclick="closeNewCategoryModal()">&times;</span>
+            <label id="new-category-title">{{ .NewCategoryTitle }}</label>
+            <div>
+                <table id="new-category-table">
+                    <tr>
+                        <th>{{ .NewCategoryName }}</th>
+                        <td><input id="new-category-name" placeholder="{{ .NewCategoryNamePlaceholder }}" maxlength="25" /></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .NewCategoryIcon }}</th>
+                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                    </tr>
+                </table>
+                <button id="add-category-button" onclick="postCategory()">{{ .NewCategoryButton }}</button>
+            </div>
+        </div>
+    </div>
+    <input id="search-bar" placeholder="{{ .Search }}" autofocus />
+    <table id="main-table">
+        <thead>
+            <tr>
+                <th class="table-header">
+                    {{ .Category }} 
+                    <input id="new-category-button" type="image" src="/images/btn_add.png" onclick="openNewCategoryModal()" title="{{ .TooltipAddCategory }}" width="18" height="18"/>
+                </th>
+                <th class="table-header">{{ .Date }}</th>
+                <th class="table-header">{{ .Description }}</th>
+                <th class="table-header">{{ .Amount }}</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="main-table-body" />
+    </table>
+    <script type="text/javascript" src="/scripts/piggy.js"></script>
+    <script>
+        const date = new Date('{{ .Year }}', '{{ .MonthIndex }}');
+        const mainTableBody = document.getElementById('main-table-body');
+        const monthLabel = document.getElementById('month');
+        const modal = document.getElementById('add-category-modal');
+
+        let index = 0;
+        let table = new Table();
+        let newCategoryImage = '';
+
+        function uploadFile() {
+            var categoryImage = document.querySelector('#new-category-icon').files[0];
+            var reader = new FileReader();
+            reader.onload = function () {
+                newCategoryImage = btoa(reader.result);
+            }
+            reader.readAsBinaryString(categoryImage);
+        }
+
+        function postCategory() {
+            const newCategoryName = document.getElementById('new-category-name').value;
+            const body = JSON.stringify({
+                name: newCategoryName,
+                icon: newCategoryImage
+            });
+            if (newCategoryName && newCategoryImage) {
+                new HttpRequest('POST', '/categories')
+                    .onSuccess(r => {
+                        const date = new Date();
+                        window.location.href = '/edit?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
+                    })
+                    .onError(r => {
+                        throw new Error('Error: ' + r);
+                    })
+                    .send(body);
+            }
+        }
+
+        function addOperation() {
+            const operation = {
+                id: 0,
+                category: 0,
+                amount: 0,
+                category_id: 0,
+                description: '',
+                date: new Date(),
+                creation_date: new Date()
+            };
+            table.addItem(new TableItem(operation, TableItemStatus.NEW));
+            fillTable();
+        }
+
+        function openNewCategoryModal() {
+            modal.style.display='block';
+        }
+
+        function closeNewCategoryModal() {
+            modal.style.display='none';
+        }
+
+        function deleteItem(idx) {
+            table.deleteItem(idx);
+            index = 0;
+            fillTable();
+        }
+
+        function formatDateSelectorContent(d) {
+            return d.getFullYear() + '-'
+                + ('0' + (d.getMonth() + 1)).slice(-2) + '-'
+                + ('0' + d.getDate()).slice(-2);
+        }
+
+        function addRow(item) {
+            const row = mainTableBody.insertRow();
+            const categoryCell = row.insertCell(0);
+            const dateCell = row.insertCell(1);
+            const descriptionCell = row.insertCell(2);
+            const amountCell = row.insertCell(3);
+            const actionsCell = row.insertCell(4);
+            const itemIndex = index;
+
+            const categoryCellId = 'category' + index;
+            categoryCell.innerHTML = new ComboBox(categoryCellId, 'category-select', table.categories.map(c=>c.name), item.operation.category).toHTML();
+            document.getElementById(categoryCellId).addEventListener('change', () => {
+                item.operation.category = document.getElementById(categoryCellId).selectedIndex;
+                item.markAsUpdated();
+            });
+           
+            const dateCellId = "date" + index;
+            dateCell.innerHTML = new DateInput('date-select', dateCellId).toHTML();
+            document.getElementById(dateCellId).value = formatDateSelectorContent(item.operation.date);
+            document.getElementById(dateCellId).addEventListener('change', () => {
+                const itemDate = document.getElementById(dateCellId).value;
+                item.operation.date = new Date(itemDate);
+                item.markAsUpdated();
+            });
+            
+            const descriptionCellId = 'desc' + index;
+            descriptionCell.innerHTML = new TextInput('desc-select', descriptionCellId, item.operation.description).toHTML();
+            document.getElementById(descriptionCellId).addEventListener('change', () => {
+                item.operation.description = document.getElementById(descriptionCellId).value;
+                item.markAsUpdated();
+            });
+
+            const amountCellID = 'amount' + index;
+            amountCell.innerHTML = new NumberInput(amountCellID).toHTML();
+            document.getElementById(amountCellID).value = item.operation.amount.toFixed(2);
+            document.getElementById(amountCellID).addEventListener('change', () => {
+                item.operation.amount = parseFloat(document.getElementById(amountCellID).value);
+                item.markAsUpdated();
+            });
+
+            actionsCell.innerHTML += new ImageInput(
+                '/images/btn_delete.png',
+                'deleteItem('+index+')',
+                '{{ .TooltipDelete }}'
+            ).toHTML();
+            index++;
+        }
+
+        function saveChanges() {
+            const newOperations = table.newItems.map(it => it.operation);
+            const updatedOperations = table.updatedItems.map(it => it.operation);
+            const deletedOperations = table.deletedItems.map(it => it.operation.id);
+
+            let pendingRequests = 0;
+            const returnIfDone = function() {
+                if (pendingRequests == 0) {
+                    window.location.href = '/';
+                }
+            };
+
+            if (newOperations.length > 0) {
+                pendingRequests++;
+                new HttpRequest('POST', '/operations')
+                    .onError(r => {
+                        throw new Error('(POST', '/operations) Error: ' + r);
+                    })
+                    .onSuccess(r => {
+                        pendingRequests--;
+                        returnIfDone();
+                    })
+                    .send(JSON.stringify(newOperations));
+            }
+            if (updatedOperations.length > 0) {
+                pendingRequests++;
+                console.log('sending ' + JSON.stringify(updatedOperations))
+                new HttpRequest('PUT', '/operations')
+                    .onError(r => {
+                        throw new Error('(PUT', '/operations) Error: ' + r);
+                    })
+                    .onSuccess(r => {
+                        pendingRequests--;
+                        returnIfDone();
+                    })
+                    .send(JSON.stringify(updatedOperations));
+            }
+            if (deletedOperations.length > 0) {
+                pendingRequests++;
+                new HttpRequest('DELETE', '/operations')
+                    .onError(r => {
+                        throw new Error('(DELETE', '/operations) Error: ' + r);
+                    })
+                    .onSuccess(r => {
+                        pendingRequests--;
+                        returnIfDone();
+                    })
+                    .send(JSON.stringify(deletedOperations));
+            }
+            // In case there is no change.
+            returnIfDone();
+        }
+
+        loadPage();
+
+        document.body.addEventListener('keydown', function(e) {
+            if (e.key == "Escape") {
+                closeNewCategoryModal();
+            }
+        });
+    </script>
+</body>
+</html>
+{{end}}

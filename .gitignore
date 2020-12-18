@@ -1,0 +1,7 @@
+vendor/*
+reports/*.xlsx
+categories/custom_*.png
+.vscode/*
+*.exe
+*.exe~
+*.db
