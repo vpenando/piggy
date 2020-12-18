@@ -33,6 +33,7 @@ func TestCreateManyOperations(t *testing.T) {
 		newOperation(2., "new operation 2", time.Now()),
 	}
 	newOperations, err := controller.CreateMany(testCases)
+	assert.NoError(t, err)
 	operations, err := controller.ReadAll()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, newOperations)
