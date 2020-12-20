@@ -107,7 +107,7 @@
                 creation_date: new Date()
             };
             table.addItem(new TableItem(operation, TableItemStatus.NEW));
-            fillTable();
+            refresh();
         }
 
         function openNewCategoryModal() {
@@ -121,7 +121,7 @@
         function deleteItem(idx) {
             table.deleteItem(idx);
             index = 0;
-            fillTable();
+            refresh();
         }
 
         function formatDateSelectorContent(d) {
