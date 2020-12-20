@@ -2,7 +2,7 @@
     width: 100%;
     height: 80px;
     margin: 0 0 10px;
-    background-color: #C84C6E;
+    background-color: #C84C60;
     position: relative;
     color: white;
 }
@@ -56,7 +56,7 @@
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
-    background-color: #C84C6E;
+    background-color: #C84C60;
     color: white;
 }
 

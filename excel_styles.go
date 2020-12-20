@@ -7,7 +7,7 @@ const titleStyleJSON = `{
 	},
 	"fill": {
 		"type":"pattern",
-		"color":["#C84C6E"],
+		"color":["#C84C60"],
 		"pattern":1
 	},
 	"border": [
