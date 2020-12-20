@@ -4,13 +4,21 @@ const searchBar = document.getElementById('search-bar');
 
 searchBar.addEventListener('input', function() {
     table.search(searchBar.value || '');
-    fillTable();
+    refresh();
 });
 
-function fillTable() {
+function refresh() {
     index = 0;
     mainTableBody.innerHTML = '';
     table.items.forEach(addRow);
+    if (typeof onOperationsLoaded === 'function') {
+        onOperationsLoaded();
+    }
+}
+
+function updateTotal() {
+    total = 0;
+    table.items.forEach(it => total += it.operation.amount);
 }
 
 async function loadOperations() {
@@ -23,10 +31,7 @@ async function loadOperations() {
                 op.creation_date = new Date(op.creation_date);
                 table.addOperation(op);
             });
-            fillTable();
-            if (typeof onOperationsLoaded === 'function') {
-                onOperationsLoaded();
-            }
+            refresh();
         })
         .onError(r => {
             throw new Error('ERROR: ' + r);
