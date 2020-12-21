@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync/atomic"
 	"time"
 )
 
@@ -48,12 +47,12 @@ func get(route string, status int) {
 			if verbose {
 				log.Printf("Error while sending request (status code %d, expected %d)\n", result.StatusCode, status)
 			}
-			atomic.AddInt32(&errs, 1)
+			errs++
 		} else if err != nil {
 			if verbose {
 				log.Println("Error:", err)
 			}
-			atomic.AddInt32(&errs, 1)
+			errs++
 		}
 	}
 	end := time.Now()
@@ -61,7 +60,7 @@ func get(route string, status int) {
 	if verbose {
 		log.Printf("Finished in %s: %d/%d errors\n\n", elapsed.Truncate(time.Millisecond), errs, count)
 	}
-	atomic.AddInt32(&totalErrs, errs)
+	totalErrs += errs
 }
 
 type testCase struct {
