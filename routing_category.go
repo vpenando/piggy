@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -52,7 +51,7 @@ func postCategory(w http.ResponseWriter, r *http.Request) {
 		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
-	category := piggy.NewCategory(html.EscapeString(rawCategory.Name), filename)
+	category := piggy.NewCategory(rawCategory.Name, filename)
 	_, err = categoryController.Create(category)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
