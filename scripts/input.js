@@ -40,6 +40,13 @@ class ImageInput extends Input {
     }
 }
 
+class HiddenImageInput extends ImageInput {
+    constructor(src, onclick, title, id) {
+        super(src, onclick, title, id);
+        this.addProperty('style', 'visibility:hidden;');
+    }
+}
+
 class NumberInput extends Input {
     constructor(id) {
         super('number');

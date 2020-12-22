@@ -111,11 +111,11 @@
         }
 
         function openNewCategoryModal() {
-            modal.style.display='block';
+            modal.style.display = 'block';
         }
 
         function closeNewCategoryModal() {
-            modal.style.display='none';
+            modal.style.display = 'none';
         }
 
         function deleteItem(idx) {
@@ -136,6 +136,7 @@
             const categoryCellId = 'category' + index;
             categoryCell.innerHTML = new ComboBox(categoryCellId, 'category-select', table.categories.map(c=>c.name), item.operation.category).toHTML();
             document.getElementById(categoryCellId).addEventListener('change', () => {
+                // /!\ TODO - Do NOT use selectedIndex to find a category
                 item.operation.category = document.getElementById(categoryCellId).selectedIndex;
                 item.markAsUpdated();
             });

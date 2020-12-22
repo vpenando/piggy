@@ -131,14 +131,15 @@
 
             creationDateCell.innerHTML = new Div([
                 new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML(),
-                '<input type="image" src="/images/icn_edit.png" id="editItem' + index + '" style="visibility:hidden;" onclick="openEditionModal('+index+')"/>'
+                new HiddenImageInput('/images/icn_edit.png', 'openEditionModal('+index+')', '{{ .EditOperationTooltip }}', 'editItem'+index).toHTML()
             ]).toHTML();
-            const deleteImage = document.getElementById('editItem'+index);
+            const editImageInput = document.getElementById('editItem'+index);
+            
             row.addEventListener("mouseover", () => {
-                deleteImage.style.visibility = 'visible';
+                editImageInput.style.visibility = 'visible';
             });
             row.addEventListener("mouseout", () => {
-                deleteImage.style.visibility = 'hidden';
+                editImageInput.style.visibility = 'hidden';
             });
             index++;
         }
@@ -151,17 +152,18 @@
             editOperationDateCell.value = formatDateSelectorContent(item.operation.date);
             editOperationDescCell.value = item.operation.description;
             editOperationAmountCell.value = item.operation.amount;
-            modal.style.display='block';
+            modal.style.display = 'block';
         }
 
         function closeEditionModal() {
-            modal.style.display='none';
+            modal.style.display = 'none';
         }
 
         function updateOperation() {
             const operation = {
                 id: currentOperationId,
                 amount: parseFloat(editOperationAmountCell.value),
+                // /!\ TODO - Do NOT use selectedIndex to find a category
                 category: editOperationCategoryCell.selectedIndex,
                 description: editOperationDescCell.value,
                 date: new Date(editOperationDateCell.value).toISOString()
@@ -172,6 +174,7 @@
                 })
                 .onSuccess(_ => {
                     closeEditionModal();
+                    currentOperationId = 0;
                     loadPage();
                 })
                 .send(JSON.stringify([operation]));
