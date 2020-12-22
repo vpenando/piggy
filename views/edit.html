@@ -124,12 +124,6 @@
             refresh();
         }
 
-        function formatDateSelectorContent(d) {
-            return d.getFullYear() + '-'
-                + ('0' + (d.getMonth() + 1)).slice(-2) + '-'
-                + ('0' + d.getDate()).slice(-2);
-        }
-
         function addRow(item) {
             const row = mainTableBody.insertRow();
             const categoryCell = row.insertCell(0);
@@ -204,7 +198,6 @@
             }
             if (updatedOperations.length > 0) {
                 pendingRequests++;
-                console.log('sending ' + JSON.stringify(updatedOperations))
                 new HttpRequest('PUT', '/operations')
                     .onError(r => {
                         throw new Error('(PUT', '/operations) Error: ' + r);

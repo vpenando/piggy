@@ -35,22 +35,22 @@
                 <table id="modal-table">
                     <tr>
                         <th>{{ .Category }}</th>
-                        <td><input id="new-category-name" maxlength="25" /></td>
+                        <td><select id="edit-operation-category" /></td>
                     </tr>
                     <tr>
                         <th>{{ .Date }}</th>
-                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                        <td><input type="date" id="edit-operation-date"></td>
                     </tr>
                     <tr>
                         <th>{{ .Description }}</th>
-                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                        <td><input id="edit-operation-desc" maxlength="25" ></td>
                     </tr>
                     <tr>
                         <th>{{ .Amount }}</th>
-                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                        <td><input type="number" id="edit-operation-amount"></td>
                     </tr>
                 </table>
-                <button id="modal-ok-button" onclick="postCategory()">OK</button>
+                <button id="modal-ok-button" onclick="updateOperation()">OK</button>
             </div>
         </div>
     </div>
@@ -77,6 +77,17 @@
         const totalLabel = document.getElementById('total');
         const modal = document.getElementById('edit-operation-modal');
         const totalTitle = totalLabel.innerHTML;
+
+        // Edition modal
+        let currentOperationId = 0;
+        const editOperationCategoryId = 'edit-operation-category';
+        const editOperationDateId = 'edit-operation-date';
+        const editOperationDescId = 'edit-operation-desc';
+        const editOperationAmountId = 'edit-operation-amount';
+        const editOperationCategoryCell = document.getElementById(editOperationCategoryId);
+        const editOperationDateCell = document.getElementById(editOperationDateId);
+        const editOperationDescCell = document.getElementById(editOperationDescId);
+        const editOperationAmountCell = document.getElementById(editOperationAmountId);
 
         let index = 0;
         let total = 0;
@@ -120,7 +131,7 @@
 
             creationDateCell.innerHTML = new Div([
                 new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML(),
-                '<input type="image" src="/images/icn_edit.png" id="editItem' + index + '" style="visibility:hidden;" onclick="editItem('+index+')"/>'
+                '<input type="image" src="/images/icn_edit.png" id="editItem' + index + '" style="visibility:hidden;" onclick="openEditionModal('+index+')"/>'
             ]).toHTML();
             const deleteImage = document.getElementById('editItem'+index);
             row.addEventListener("mouseover", () => {
@@ -132,16 +143,38 @@
             index++;
         }
 
-        function editItem(idx) {
-            openEditionModal();
-        }
-
-        function openEditionModal() {
+        function openEditionModal(idx) {
+            const item = table.items[idx];
+            currentOperationId = item.operation.id;
+            editOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c=>c.name), item.operation.category).toHTML();
+            editOperationDateCell.innerHTML = new DateInput('date-select', editOperationDateId).toHTML();
+            editOperationDateCell.value = formatDateSelectorContent(item.operation.date);
+            editOperationDescCell.value = item.operation.description;
+            editOperationAmountCell.value = item.operation.amount;
             modal.style.display='block';
         }
 
         function closeEditionModal() {
             modal.style.display='none';
+        }
+
+        function updateOperation() {
+            const operation = {
+                id: currentOperationId,
+                amount: parseFloat(editOperationAmountCell.value),
+                category: editOperationCategoryCell.selectedIndex,
+                description: editOperationDescCell.value,
+                date: new Date(editOperationDateCell.value).toISOString()
+            };
+            new HttpRequest('PUT', '/operations')
+                .onError(r => {
+                    throw new Error('(PUT', '/operations) Error: ' + r);
+                })
+                .onSuccess(_ => {
+                    closeEditionModal();
+                    loadPage();
+                })
+                .send(JSON.stringify([operation]));
         }
 
         async function onOperationsLoaded() {
