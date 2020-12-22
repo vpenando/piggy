@@ -64,6 +64,10 @@
     background-color: #f0f0f0;
 }
 
+#main-table tr:hover {
+    background: #d0d0d0;
+}
+
 .cell-content {
     font-family: Helvetica, sans-serif;
     color: #555;
