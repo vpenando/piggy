@@ -9,6 +9,7 @@
     <script src="/scripts/combobox.js"></script>
     <script src="/scripts/div.js"></script>
     <script src="/scripts/image.js"></script>
+    <script src="/scripts/input.js"></script>
     <script src="/scripts/label.js"></script>
     <script src="/scripts/request.js"></script>
     <script src="/scripts/table.js"></script>
@@ -88,8 +89,23 @@
             amountCell.innerHTML = (item.operation.amount >= 0)
                 ? new Label('+' + item.operation.amount.toFixed(2) + '€', 'positive-amount-cell-content').toHTML()
                 : new Label(item.operation.amount.toFixed(2) + '€', 'negative-amount-cell-content').toHTML();
-            creationDateCell.innerHTML = new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML();
+
+            creationDateCell.innerHTML = new Div([
+                new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML(),
+                '<input type="image" src="/images/icn_edit.png" id="editItem' + index + '" style="visibility:hidden;" onclick="editItem('+index+')"/>'
+            ]).toHTML();
+            const deleteImage = document.getElementById('editItem'+index);
+            row.addEventListener("mouseover", () => {
+                deleteImage.style.visibility = 'visible';
+            });
+            row.addEventListener("mouseout", () => {
+                deleteImage.style.visibility = 'hidden';
+            });
             index++;
+        }
+
+        function editItem(idx) {
+            
         }
 
         async function onOperationsLoaded() {

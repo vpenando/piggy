@@ -67,6 +67,7 @@
 .cell-content {
     font-family: Helvetica, sans-serif;
     color: #555;
+    margin-right: 50px;
 }
 
 .positive-amount-cell-content {
