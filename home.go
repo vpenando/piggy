@@ -15,6 +15,8 @@ type HomePageTemplate struct {
 	EditMode string
 	Download string
 	Total    string
+
+	EditOperationTitle string
 }
 
 // newHomePageTemplate returns an HomePageTemplate for given year, month and language.

@@ -22,12 +22,12 @@
             <input class="button" type="image" src="/images/btn_add.png" onclick="addOperation()" title="{{ .TooltipAdd }}" />
         </div>
     </div>
-    <div id="add-category-modal" class="new-category-modal-background">
-        <div class="new-category-modal-content">
-            <span class="close-new-category-modal" onclick="closeNewCategoryModal()">&times;</span>
-            <label id="new-category-title">{{ .NewCategoryTitle }}</label>
+    <div id="add-category-modal" class="modal-background">
+        <div class="modal-content">
+            <span class="modal" onclick="closeNewCategoryModal()">&times;</span>
+            <label id="modal-title">{{ .NewCategoryTitle }}</label>
             <div>
-                <table id="new-category-table">
+                <table id="modal-table">
                     <tr>
                         <th>{{ .NewCategoryName }}</th>
                         <td><input id="new-category-name" placeholder="{{ .NewCategoryNamePlaceholder }}" maxlength="25" /></td>
@@ -37,7 +37,7 @@
                         <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
                     </tr>
                 </table>
-                <button id="add-category-button" onclick="postCategory()">{{ .NewCategoryButton }}</button>
+                <button id="modal-ok-button" onclick="postCategory()">{{ .NewCategoryButton }}</button>
             </div>
         </div>
     </div>

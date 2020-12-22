@@ -27,6 +27,33 @@
             <a id="settings" href="/settings"><img class="button" src="/images/btn_settings.png"></a>
         </div>
     </div>
+    <div id="edit-operation-modal" class="modal-background">
+        <div class="modal-content">
+            <span class="modal" onclick="closeEditionModal()">&times;</span>
+            <label id="modal-title">{{ .EditOperationTitle }}</label>
+            <div>
+                <table id="modal-table">
+                    <tr>
+                        <th>{{ .Category }}</th>
+                        <td><input id="new-category-name" maxlength="25" /></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Date }}</th>
+                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Description }}</th>
+                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Amount }}</th>
+                        <td><input type="file" onchange="uploadFile()" id="new-category-icon" accept="image/png"></td>
+                    </tr>
+                </table>
+                <button id="modal-ok-button" onclick="postCategory()">OK</button>
+            </div>
+        </div>
+    </div>
     <input id="search-bar" placeholder="{{ .Search }}" autofocus />
     <script src="/scripts/piggy.js"></script>
     <table id="main-table">
@@ -48,6 +75,7 @@
         const report = document.getElementById('report');
         const monthLabel = document.getElementById('month');
         const totalLabel = document.getElementById('total');
+        const modal = document.getElementById('edit-operation-modal');
         const totalTitle = totalLabel.innerHTML;
 
         let index = 0;
@@ -105,7 +133,15 @@
         }
 
         function editItem(idx) {
-            
+            openEditionModal();
+        }
+
+        function openEditionModal() {
+            modal.style.display='block';
+        }
+
+        function closeEditionModal() {
+            modal.style.display='none';
         }
 
         async function onOperationsLoaded() {
@@ -142,6 +178,12 @@
             }
             searchBar.value = '';
             init();
+        });
+
+        document.body.addEventListener('keydown', function(e) {
+            if (e.key == "Escape") {
+                closeEditionModal();
+            }
         });
     </script>
 </body>
