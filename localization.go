@@ -90,9 +90,11 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 			CreationDate: "Created at",
 			TableColumns: columnsByLanguage[languageEnglish],
 		},
-		Total:    "Total:",
-		Download: "Download",
-		EditMode: "Edit mode",
+		Total:                "Total:",
+		Download:             "Download",
+		EditMode:             "Edit mode",
+		EditOperationTitle:   "Edit operation",
+		EditOperationTooltip: "Edit operation",
 	},
 	languageFrench: {
 		TablePageTemplate: TablePageTemplate{
@@ -108,9 +110,11 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 			CreationDate: "Créé le",
 			TableColumns: columnsByLanguage[languageFrench],
 		},
-		Total:    "Total :",
-		Download: "Télécharger",
-		EditMode: "Mode édition",
+		Total:                "Total :",
+		Download:             "Télécharger",
+		EditMode:             "Mode édition",
+		EditOperationTitle:   "Modifier une opération",
+		EditOperationTooltip: "Modifier une opération",
 	},
 }
 

@@ -29,11 +29,21 @@ class DateInput extends Input {
 }
 
 class ImageInput extends Input {
-    constructor(src, onclick, title) {
+    constructor(src, onclick, title, id) {
         super('image');
         this.addProperty('src', src);
         this.addProperty('onclick', onclick);
         this.addProperty('title', title);
+        if (id) {
+            this.addProperty('id', id);
+        }
+    }
+}
+
+class HiddenImageInput extends ImageInput {
+    constructor(src, onclick, title, id) {
+        super(src, onclick, title, id);
+        this.addProperty('style', 'visibility:hidden;');
     }
 }
 

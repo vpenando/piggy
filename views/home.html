@@ -9,6 +9,7 @@
     <script src="/scripts/combobox.js"></script>
     <script src="/scripts/div.js"></script>
     <script src="/scripts/image.js"></script>
+    <script src="/scripts/input.js"></script>
     <script src="/scripts/label.js"></script>
     <script src="/scripts/request.js"></script>
     <script src="/scripts/table.js"></script>
@@ -24,6 +25,33 @@
             <a id="report" download="report.xlsx"><img class="button" src="/images/btn_download.png"></a>
             <a id="edit" title="{{ .EditMode }}"><img class="button" src="/images/btn_edit.png"></a>
             <a id="settings" href="/settings"><img class="button" src="/images/btn_settings.png"></a>
+        </div>
+    </div>
+    <div id="edit-operation-modal" class="modal-background">
+        <div class="modal-content">
+            <span class="modal" onclick="closeEditionModal()">&times;</span>
+            <label id="modal-title">{{ .EditOperationTitle }}</label>
+            <div>
+                <table id="modal-table">
+                    <tr>
+                        <th>{{ .Category }}</th>
+                        <td><select id="edit-operation-category" /></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Date }}</th>
+                        <td><input type="date" id="edit-operation-date"></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Description }}</th>
+                        <td><input id="edit-operation-desc" maxlength="25" ></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Amount }}</th>
+                        <td><input type="number" id="edit-operation-amount"></td>
+                    </tr>
+                </table>
+                <button id="modal-ok-button" onclick="updateOperation()">OK</button>
+            </div>
         </div>
     </div>
     <input id="search-bar" placeholder="{{ .Search }}" autofocus />
@@ -47,7 +75,19 @@
         const report = document.getElementById('report');
         const monthLabel = document.getElementById('month');
         const totalLabel = document.getElementById('total');
+        const modal = document.getElementById('edit-operation-modal');
         const totalTitle = totalLabel.innerHTML;
+
+        // Edition modal
+        let currentOperationId = 0;
+        const editOperationCategoryId = 'edit-operation-category';
+        const editOperationDateId = 'edit-operation-date';
+        const editOperationDescId = 'edit-operation-desc';
+        const editOperationAmountId = 'edit-operation-amount';
+        const editOperationCategoryCell = document.getElementById(editOperationCategoryId);
+        const editOperationDateCell = document.getElementById(editOperationDateId);
+        const editOperationDescCell = document.getElementById(editOperationDescId);
+        const editOperationAmountCell = document.getElementById(editOperationAmountId);
 
         let index = 0;
         let total = 0;
@@ -88,8 +128,55 @@
             amountCell.innerHTML = (item.operation.amount >= 0)
                 ? new Label('+' + item.operation.amount.toFixed(2) + '€', 'positive-amount-cell-content').toHTML()
                 : new Label(item.operation.amount.toFixed(2) + '€', 'negative-amount-cell-content').toHTML();
-            creationDateCell.innerHTML = new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML();
+
+            creationDateCell.innerHTML = new Div([
+                new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML(),
+                new HiddenImageInput('/images/icn_edit.png', 'openEditionModal('+index+')', '{{ .EditOperationTooltip }}', 'editItem'+index).toHTML()
+            ]).toHTML();
+            const editImageInput = document.getElementById('editItem'+index);
+            
+            row.addEventListener("mouseover", () => {
+                editImageInput.style.visibility = 'visible';
+            });
+            row.addEventListener("mouseout", () => {
+                editImageInput.style.visibility = 'hidden';
+            });
             index++;
+        }
+
+        function openEditionModal(idx) {
+            const item = table.items[idx];
+            currentOperationId = item.operation.id;
+            editOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c => c.name), item.operation.category).toHTML();
+            editOperationDateCell.value = formatDateSelectorContent(item.operation.date);
+            editOperationDescCell.value = item.operation.description;
+            editOperationAmountCell.value = item.operation.amount;
+            modal.style.display = 'block';
+        }
+
+        function closeEditionModal() {
+            modal.style.display = 'none';
+        }
+
+        function updateOperation() {
+            const operation = {
+                id: currentOperationId,
+                amount: parseFloat(editOperationAmountCell.value),
+                // /!\ TODO - STOP USING selectedIndex to find a category
+                category: editOperationCategoryCell.selectedIndex,
+                description: editOperationDescCell.value,
+                date: new Date(editOperationDateCell.value).toISOString()
+            };
+            new HttpRequest('PUT', '/operations')
+                .onError(r => {
+                    throw new Error('(PUT', '/operations) Error: ' + r);
+                })
+                .onSuccess(_ => {
+                    closeEditionModal();
+                    currentOperationId = 0;
+                    loadPage();
+                })
+                .send(JSON.stringify([operation]));
         }
 
         async function onOperationsLoaded() {
@@ -126,6 +213,12 @@
             }
             searchBar.value = '';
             init();
+        });
+
+        document.body.addEventListener('keydown', function(e) {
+            if (e.key == "Escape") {
+                closeEditionModal();
+            }
         });
     </script>
 </body>
