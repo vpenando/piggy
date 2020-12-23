@@ -147,8 +147,7 @@
         function openEditionModal(idx) {
             const item = table.items[idx];
             currentOperationId = item.operation.id;
-            editOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c=>c.name), item.operation.category).toHTML();
-            editOperationDateCell.innerHTML = new DateInput('date-select', editOperationDateId).toHTML();
+            editOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c => c.name), item.operation.category).toHTML();
             editOperationDateCell.value = formatDateSelectorContent(item.operation.date);
             editOperationDescCell.value = item.operation.description;
             editOperationAmountCell.value = item.operation.amount;
@@ -163,7 +162,7 @@
             const operation = {
                 id: currentOperationId,
                 amount: parseFloat(editOperationAmountCell.value),
-                // /!\ TODO - Do NOT use selectedIndex to find a category
+                // /!\ TODO - STOP USING selectedIndex to find a category
                 category: editOperationCategoryCell.selectedIndex,
                 description: editOperationDescCell.value,
                 date: new Date(editOperationDateCell.value).toISOString()

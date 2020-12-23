@@ -134,9 +134,9 @@
             const itemIndex = index;
 
             const categoryCellId = 'category' + index;
-            categoryCell.innerHTML = new ComboBox(categoryCellId, 'category-select', table.categories.map(c=>c.name), item.operation.category).toHTML();
+            categoryCell.innerHTML = new ComboBox(categoryCellId, 'category-select', table.categories.map(c => c.name), item.operation.category).toHTML();
             document.getElementById(categoryCellId).addEventListener('change', () => {
-                // /!\ TODO - Do NOT use selectedIndex to find a category
+                // /!\ TODO - STOP USING selectedIndex to find a category
                 item.operation.category = document.getElementById(categoryCellId).selectedIndex;
                 item.markAsUpdated();
             });
