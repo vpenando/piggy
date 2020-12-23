@@ -78,8 +78,12 @@
         const modal = document.getElementById('edit-operation-modal');
         const totalTitle = totalLabel.innerHTML;
 
+        let index = 0;
+        let total = 0;
+        let table = new Table();
+
         // Edition modal
-        let currentOperationId = 0;
+        let currentOperation = null;
         const editOperationCategoryId = 'edit-operation-category';
         const editOperationDateId = 'edit-operation-date';
         const editOperationDescId = 'edit-operation-desc';
@@ -88,10 +92,6 @@
         const editOperationDateCell = document.getElementById(editOperationDateId);
         const editOperationDescCell = document.getElementById(editOperationDescId);
         const editOperationAmountCell = document.getElementById(editOperationAmountId);
-
-        let index = 0;
-        let total = 0;
-        let table = new Table();
 
         function sortTable(column) {
             index = 0;
@@ -146,11 +146,11 @@
 
         function openEditionModal(idx) {
             const item = table.items[idx];
-            currentOperationId = item.operation.id;
-            editOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c => c.name), item.operation.category).toHTML();
-            editOperationDateCell.value = formatDateSelectorContent(item.operation.date);
-            editOperationDescCell.value = item.operation.description;
-            editOperationAmountCell.value = item.operation.amount;
+            currentOperation = item.operation;
+            editOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c => c.name), currentOperation.category).toHTML();
+            editOperationDateCell.value = formatDateSelectorContent(currentOperation.date);
+            editOperationDescCell.value = currentOperation.description;
+            editOperationAmountCell.value = currentOperation.amount;
             modal.style.display = 'block';
         }
 
@@ -159,24 +159,21 @@
         }
 
         function updateOperation() {
-            const operation = {
-                id: currentOperationId,
-                amount: parseFloat(editOperationAmountCell.value),
-                // /!\ TODO - STOP USING selectedIndex to find a category
-                category: editOperationCategoryCell.selectedIndex,
-                description: editOperationDescCell.value,
-                date: new Date(editOperationDateCell.value).toISOString()
-            };
+            currentOperation.amount = parseFloat(editOperationAmountCell.value);
+            // /!\ TODO - STOP USING selectedIndex to find a category
+            currentOperation.category = editOperationCategoryCell.selectedIndex;
+            currentOperation.description = editOperationDescCell.value;
+            currentOperation.date = new Date(editOperationDateCell.value).toISOString();
             new HttpRequest('PUT', '/operations')
                 .onError(r => {
                     throw new Error('(PUT', '/operations) Error: ' + r);
                 })
                 .onSuccess(_ => {
                     closeEditionModal();
-                    currentOperationId = 0;
+                    currentOperation = null;
                     loadPage();
                 })
-                .send(JSON.stringify([operation]));
+                .send(JSON.stringify([currentOperation]));
         }
 
         async function onOperationsLoaded() {
