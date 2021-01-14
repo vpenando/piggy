@@ -49,7 +49,7 @@
                         <th>{{ .Amount }}</th>
                         <td>
                             <input type="number" id="edit-operation-amount">
-                            <input type="checkbox" id="amout-type">
+                            <input type="checkbox" id="amount-type">
                             <label>{{ .AmountType }}</label>
                         </td>
                     </tr>
@@ -80,7 +80,7 @@
         const monthLabel = document.getElementById('month');
         const totalLabel = document.getElementById('total');
         const modal = document.getElementById('edit-operation-modal');
-        const checkbox = document.getElementById('amout-type');
+        const checkbox = document.getElementById('amount-type');
         const totalTitle = totalLabel.innerHTML;
 
         let index = 0;
