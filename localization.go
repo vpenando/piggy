@@ -5,7 +5,7 @@ type Language int
 
 // Here are the different available languages.
 const (
-	languageEnglish Language = iota
+	languageEnglish Language = iota + 1
 	languageFrench
 )
 

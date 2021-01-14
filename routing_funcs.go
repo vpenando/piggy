@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -41,13 +40,7 @@ func handleError(w http.ResponseWriter, err error, status int) {
 		return
 	}
 	log.Println("Error:", err)
-	w.WriteHeader(status)
-	result := struct {
-		Err    string
-		Status int
-	}{err.Error(), status}
-	j, _ := json.Marshal(result)
-	w.Write(j)
+	http.Error(w, err.Error(), status)
 }
 
 func serveImage(w http.ResponseWriter, r *http.Request, image string) {
