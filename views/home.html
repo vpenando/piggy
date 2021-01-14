@@ -43,11 +43,15 @@
                     </tr>
                     <tr>
                         <th>{{ .Description }}</th>
-                        <td><input id="edit-operation-desc" maxlength="25" ></td>
+                        <td><input id="edit-operation-desc" maxlength="25"></td>
                     </tr>
                     <tr>
                         <th>{{ .Amount }}</th>
-                        <td><input type="number" id="edit-operation-amount"></td>
+                        <td>
+                            <input type="number" id="edit-operation-amount">
+                            <input type="checkbox" id="amout-type">
+                            <label>{{ .AmountType }}</label>
+                        </td>
                     </tr>
                 </table>
                 <button id="modal-ok-button" onclick="updateOperation()">OK</button>
@@ -76,6 +80,7 @@
         const monthLabel = document.getElementById('month');
         const totalLabel = document.getElementById('total');
         const modal = document.getElementById('edit-operation-modal');
+        const checkbox = document.getElementById('amout-type');
         const totalTitle = totalLabel.innerHTML;
 
         let index = 0;
@@ -151,6 +156,9 @@
             editOperationDateCell.value = formatDateSelectorContent(currentOperation.date);
             editOperationDescCell.value = currentOperation.description;
             editOperationAmountCell.value = currentOperation.amount;
+            if (currentOperation.amount < 0) {
+                checkbox.checked = true;
+            }
             modal.style.display = 'block';
         }
 
@@ -158,12 +166,15 @@
             modal.style.display = 'none';
         }
 
-        function updateOperation() {
+        async function updateOperation() {
             currentOperation.amount = parseFloat(editOperationAmountCell.value);
             // /!\ TODO - STOP USING selectedIndex to find a category
             currentOperation.category = editOperationCategoryCell.selectedIndex;
             currentOperation.description = editOperationDescCell.value;
             currentOperation.date = new Date(editOperationDateCell.value).toISOString();
+            if (checkbox.checked && currentOperation.amount > 0) {
+                currentOperation.amount = -currentOperation.amount;
+            }
             new HttpRequest('PUT', '/operations')
                 .onError(r => {
                     throw new Error('(PUT', '/operations) Error: ' + r);
@@ -189,7 +200,7 @@
                 : new Label(totalTitle + ' ' + amount + '€').toHTML();
         }
 
-        function init() {
+        async function init() {
             loadPage();
             report.href = '/reports?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
             edit.href = '/edit?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
