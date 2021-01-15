@@ -18,6 +18,7 @@ type HomePageTemplate struct {
 
 	EditOperationTitle   string
 	EditOperationTooltip string
+	AmountType           string
 }
 
 // newHomePageTemplate returns an HomePageTemplate for given year, month and language.

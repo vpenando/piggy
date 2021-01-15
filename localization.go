@@ -95,6 +95,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 		EditMode:             "Edit mode",
 		EditOperationTitle:   "Edit operation",
 		EditOperationTooltip: "Edit operation",
+		AmountType:           "Expense",
 	},
 	languageFrench: {
 		TablePageTemplate: TablePageTemplate{
@@ -115,6 +116,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 		EditMode:             "Mode édition",
 		EditOperationTitle:   "Modifier une opération",
 		EditOperationTooltip: "Modifier une opération",
+		AmountType:           "Dépense",
 	},
 }
 
