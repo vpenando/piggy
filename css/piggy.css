@@ -11,6 +11,30 @@
     margin: 13px;
 }
 
+.prev-month {
+    position: absolute;
+    top: 33%;
+    left: 35%;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    border-top: 12px solid transparent;
+    border-right: 20px solid #eee;
+    border-bottom: 12px solid transparent;
+}
+
+.next-month {
+    position: absolute;
+    top: 33%;
+    right: 35%;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    border-top: 12px solid transparent;
+    border-left: 20px solid #eee;
+    border-bottom: 12px solid transparent;
+}
+
 #month {
     position: absolute;
     top: 50%;
