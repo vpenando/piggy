@@ -15,17 +15,12 @@
     <script src="/scripts/table.js"></script>
 </head>
 <body>
-    <style>
-        
-        </style>
-        <div id="head-banner">
-            <a href="/"><img id="icon" src="/images/icn_piggy.png" /></a>
-      
-            <div class="prev-month" onclick="goToPreviousMonth()"></div>
-            <label id="month"></label>
-            <div class="next-month" onclick="goToNextMonth()"></div>
-    
-            <label id="total">{{ .Total }}</label>
+    <div id="head-banner">
+        <a href="/"><img id="icon" src="/images/icn_piggy.png" /></a>
+        <div class="prev-month" onclick="goToPreviousMonth()"></div>
+        <label id="month"></label>
+        <div class="next-month" onclick="goToNextMonth()"></div>
+        <label id="total">{{ .Total }}</label>
         <div id="buttons">
             <a id="report" download="report.xlsx"><img class="button" src="/images/btn_download.png"></a>
             <a id="edit" title="{{ .EditMode }}"><img class="button" src="/images/btn_edit.png"></a>
