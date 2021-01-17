@@ -156,9 +156,7 @@
             editOperationDateCell.value = formatDateSelectorContent(currentOperation.date);
             editOperationDescCell.value = currentOperation.description;
             editOperationAmountCell.value = currentOperation.amount;
-            if (currentOperation.amount < 0) {
-                checkbox.checked = true;
-            }
+            checkbox.checked = (currentOperation.amount < 0);
             modal.style.display = 'block';
         }
 
