@@ -189,7 +189,7 @@
                 pendingRequests++;
                 new HttpRequest('POST', '/operations')
                     .onError(r => {
-                        throw new Error('(POST', '/operations) Error: ' + r);
+                        throw new Error('[POST /operations] Error: ' + r);
                     })
                     .onSuccess(r => {
                         pendingRequests--;
@@ -201,7 +201,7 @@
                 pendingRequests++;
                 new HttpRequest('PUT', '/operations')
                     .onError(r => {
-                        throw new Error('(PUT', '/operations) Error: ' + r);
+                        throw new Error('[PUT /operations] Error: ' + r);
                     })
                     .onSuccess(r => {
                         pendingRequests--;
@@ -213,7 +213,7 @@
                 pendingRequests++;
                 new HttpRequest('DELETE', '/operations')
                     .onError(r => {
-                        throw new Error('(DELETE', '/operations) Error: ' + r);
+                        throw new Error('[DELETE /operations] Error: ' + r);
                     })
                     .onSuccess(r => {
                         pendingRequests--;
