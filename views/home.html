@@ -198,7 +198,7 @@
                 : new Label(totalTitle + ' ' + amount + '€').toHTML();
         }
 
-        async function init() {
+        function init() {
             searchBar.value = '';
             loadPage();
             report.href = '/reports?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
