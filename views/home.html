@@ -22,17 +22,49 @@
         <div class="next-month" onclick="goToNextMonth()"></div>
         <label id="total">{{ .Total }}</label>
         <div id="buttons">
-            <a id="report" download="report.xlsx"><img class="button" src="/images/btn_download.png"></a>
+            <a id="add" title="new" onClick="openNewOperationModal()"><img class="button" src="/images/btn_add.png"></a>
             <a id="edit" title="{{ .EditMode }}"><img class="button" src="/images/btn_edit.png"></a>
+            <a id="report" download="report.xlsx"><img class="button" src="/images/btn_download.png"></a>
             <a id="settings" href="/settings"><img class="button" src="/images/btn_settings.png"></a>
+        </div>
+    </div>
+    <div id="new-operation-modal" class="modal-background">
+        <div class="modal-content">
+            <span class="modal" onclick="closeEditionModal()">&times;</span>
+            <label class="modal-title">{{ .NewOperationTitle }}</label>
+            <div>
+                <table class="modal-table">
+                    <tr>
+                        <th>{{ .Category }}</th>
+                        <td><select id="new-operation-category" /></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Date }}</th>
+                        <td><input type="date" id="new-operation-date"></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Description }}</th>
+                        <td><input id="new-operation-desc" maxlength="25"></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Amount }}</th>
+                        <td>
+                            <input type="number" id="new-operation-amount">
+                            <input type="checkbox" id="amount-type">
+                            <label>{{ .AmountType }}</label>
+                        </td>
+                    </tr>
+                </table>
+                <button id="modal-ok-button" onclick="newOperation()">OK</button>
+            </div>
         </div>
     </div>
     <div id="edit-operation-modal" class="modal-background">
         <div class="modal-content">
             <span class="modal" onclick="closeEditionModal()">&times;</span>
-            <label id="modal-title">{{ .EditOperationTitle }}</label>
+            <label class="modal-title">{{ .EditOperationTitle }}</label>
             <div>
-                <table id="modal-table">
+                <table class="modal-table">
                     <tr>
                         <th>{{ .Category }}</th>
                         <td><select id="edit-operation-category" /></td>
@@ -75,17 +107,29 @@
     <script>
         const date = new Date();
         const mainTableBody = document.getElementById('main-table-body');
-        const edit = document.getElementById('edit');
+        const addButton = document.getElementById('add');
+        const editButton = document.getElementById('edit');
         const report = document.getElementById('report');
         const monthLabel = document.getElementById('month');
         const totalLabel = document.getElementById('total');
-        const modal = document.getElementById('edit-operation-modal');
+        const newOperationModal = document.getElementById('new-operation-modal');
+        const editOperationModal = document.getElementById('edit-operation-modal');
         const checkbox = document.getElementById('amount-type');
         const totalTitle = totalLabel.innerHTML;
 
         let index = 0;
         let total = 0;
         let table = new Table();
+
+        // New operation modal
+        const newOperationCategoryId = 'new-operation-category';
+        const newOperationDateId = 'new-operation-date';
+        const newOperationDescId = 'new-operation-desc';
+        const newOperationAmountId = 'new-operation-amount';
+        const newOperationCategoryCell = document.getElementById(newOperationCategoryId);
+        const newOperationDateCell = document.getElementById(newOperationDateId);
+        const newOperationDescCell = document.getElementById(newOperationDescId);
+        const newOperationAmountCell = document.getElementById(newOperationAmountId);
 
         // Edition modal
         let currentOperation = null;
@@ -157,11 +201,11 @@
             editOperationDescCell.value = currentOperation.description;
             editOperationAmountCell.value = currentOperation.amount;
             checkbox.checked = (currentOperation.amount < 0);
-            modal.style.display = 'block';
+            editOperationModal.style.display = 'block';
         }
 
         function closeEditionModal() {
-            modal.style.display = 'none';
+            editOperationModal.style.display = 'none';
         }
 
         async function updateOperation() {
@@ -185,6 +229,42 @@
                 .send(JSON.stringify([currentOperation]));
         }
 
+        function openNewOperationModal(){
+            newOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c => c.name)).toHTML();
+            newOperationDateCell.value = formatDateSelectorContent(new Date());
+            newOperationDescCell.value = '';
+            newOperationAmountCell.value = 0;
+            checkbox.checked = true;
+            newOperationModal.style.display = 'block';
+        }
+
+        function closeNewOperationModal(){
+            newOperationModal.style.display = 'none';
+        }
+
+        async function newOperation() {
+            let amount = parseFloat(newOperationAmountCell.value);
+            if (checkbox.checked && amount > 0) {
+                amount = -amount;
+            }
+            const date = new Date(newOperationDateCell.value).toISOString();
+            const creation_date = new Date().toISOString();
+            const newOperation = {
+                amount: amount,
+                category: newOperationCategoryCell.selectedIndex,
+                description: newOperationDescCell.value,
+                date: date,
+                creation_date: creation_date
+            }
+            new HttpRequest('POST', '/operations')
+                .onSuccess(_ => {
+                    closeNewOperationModal();
+                    loadPage();
+                })
+                .onError(r => { throw new Error('[POST /operations] Error: ' + r); })
+                .send(JSON.stringify([newOperation]));
+        }
+
         async function onOperationsLoaded() {
             total = 0;
             if (table.items && table.items.length > 0) {
@@ -198,11 +278,11 @@
                 : new Label(totalTitle + ' ' + amount + '€').toHTML();
         }
 
-        async function init() {
+        function init() {
             searchBar.value = '';
             loadPage();
             report.href = '/reports?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
-            edit.href = '/edit?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
+            editButton.href = '/edit?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1);
         }
 
         init();
@@ -231,6 +311,7 @@
         document.body.addEventListener('keydown', function(e) {
             if (e.key == "Escape") {
                 closeEditionModal();
+                closeNewOperationModal();
             }
         });
     </script>
