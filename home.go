@@ -16,6 +16,7 @@ type HomePageTemplate struct {
 	Download string
 	Total    string
 
+	NewOperationTitle    string
 	EditOperationTitle   string
 	EditOperationTooltip string
 	AmountType           string
