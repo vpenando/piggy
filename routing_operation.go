@@ -48,34 +48,6 @@ func getOperations(w http.ResponseWriter, r *http.Request) {
 // Possible HTTP errors:
 //  * Invalid request body => StatusUnprocessableEntity
 //  * Operations saving failure => StatusInternalServerError
-func postOperation(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method, r.URL)
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		handleError(w, err, http.StatusUnprocessableEntity)
-		return
-	}
-	var operation piggy.Operation
-	err = json.Unmarshal(body, &operation)
-	if err != nil {
-		handleError(w, err, http.StatusUnprocessableEntity)
-		return
-	}
-	log.Println("Creating 1 operation...")
-	createdOperation, err := operationController.CreateOne(operation)
-	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
-		return
-	}
-	serialized, _ := json.Marshal(createdOperation)
-	r.Header.Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(serialized)
-}
-
-// Possible HTTP errors:
-//  * Invalid request body => StatusUnprocessableEntity
-//  * Operations saving failure => StatusInternalServerError
 func postOperations(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	body, err := ioutil.ReadAll(r.Body)

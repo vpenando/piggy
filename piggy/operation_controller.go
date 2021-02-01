@@ -29,17 +29,6 @@ func NewOperationController(db *gorm.DB) (*OperationController, error) {
 	return controller, err
 }
 
-// CreateOne inserts one operation into the database and then
-// returns it.
-// It also returns an error if something went wrong, nil otherwise.
-//
-// Example:
-//  operation, err := controller.CreateOne(operation1)
-func (oc *OperationController) CreateOne(operation Operation) (Operation, error) {
-	err := oc.db.Create(&operation).Error
-	return operation, err
-}
-
 // CreateMany inserts new operations into the database and then
 // returns them.
 // It also returns an error if something went wrong, nil otherwise.
