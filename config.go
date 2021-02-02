@@ -48,6 +48,7 @@ func init() {
 	} else {
 		logNilSection(localizationConfigName)
 	}
+	//routing.RegisterCurrentLanguage(currentLanguage)
 }
 
 func tryReadSection(config *ini.File, sectionName string) *ini.Section {

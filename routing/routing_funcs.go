@@ -16,10 +16,15 @@ import (
 )
 
 var (
-	database            *gorm.DB
+	//database            *gorm.DB
 	operationController *piggy.OperationController
 	categoryController  *piggy.CategoryController
 )
+
+func InitControllers(db *gorm.DB) {
+	operationController, _ = piggy.NewOperationController(db)
+	categoryController, _ = piggy.NewCategoryController(db)
+}
 
 func HandleError(w http.ResponseWriter, err error, status int) {
 	if err == nil {

@@ -9,7 +9,7 @@ replace (
 )
 
 require (
-	github.com/360EntSecGroup-Skylar/excelize v1.4.1
+	
 	github.com/gorilla/mux v1.8.0
 	github.com/vpenando/piggy/piggy v0.0.0-20201124232141-06292e00dada
 	gopkg.in/ini.v1 v1.62.0

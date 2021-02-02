@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/vpenando/piggy/piggy"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -21,8 +20,8 @@ var (
 	editPageTemplate     localization.EditPageTemplate
 	settingsPageTemplate localization.SettingsPageTemplate
 	database             *gorm.DB
-	operationController  *piggy.OperationController
-	categoryController   *piggy.CategoryController
+	// operationController  *piggy.OperationController
+	// categoryController   *piggy.CategoryController
 )
 
 func init() {
@@ -31,8 +30,9 @@ func init() {
 	if err != nil {
 		panic(fmt.Sprintf("Failed to init database: %s", err))
 	}
-	operationController, _ = piggy.NewOperationController(database)
-	categoryController, _ = piggy.NewCategoryController(database)
+	// operationController, _ = piggy.NewOperationController(database)
+	// categoryController, _ = piggy.NewCategoryController(database)
+	routing.InitControllers(database)
 }
 
 func handleRoutes() {
@@ -202,12 +202,12 @@ func reports(w http.ResponseWriter, r *http.Request) {
 		routing.HandleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
-	file, err := newReport(year, month)
+	file, err := routing.NewReport(year, month)
 	if err != nil {
 		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
-	err = export(reportFilename, file)
+	err = routing.Export(reportFilename, file, currentLanguage)
 	if err != nil {
 		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
