@@ -1,4 +1,4 @@
-package main
+package localization
 
 import "errors"
 
@@ -21,18 +21,23 @@ type SettingsPageTemplate struct {
 	CurrentServerDatabase string
 }
 
-func newSettingsPageTemplate(language Language) (SettingsPageTemplate, error) {
+// NewSettingsPageTemplate returns an HomePageTemplate for a given language,
+// server port and database.
+//
+// Example:
+//  template := NewSettingsPageTemplate(LanguageEnglish, "8080", "piggy.db")
+func NewSettingsPageTemplate(language Language, serverPort, serverDatabase string) (SettingsPageTemplate, error) {
 	template, ok := settingsPagesByLanguage[language]
 	if !ok {
 		return template, errors.New("invalid language")
 	}
-	template.CurrentLanguage = currentLanguage.String()
+	template.CurrentLanguage = language.String()
 	template.CurrentServerPort = serverPort
 	template.CurrentServerDatabase = serverDatabase
 	return template, nil
 }
 
 var availableLanguages = []Language{
-	languageEnglish,
-	languageFrench,
+	LanguageEnglish,
+	LanguageFrench,
 }

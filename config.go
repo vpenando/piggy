@@ -5,6 +5,8 @@ import (
 	"strconv"
 
 	"gopkg.in/ini.v1"
+
+	"localization"
 )
 
 const (
@@ -21,12 +23,12 @@ var (
 	serverDatabase = "piggy.db"
 
 	// Localization config
-	currentLanguage = languageEnglish
+	currentLanguage = localization.LanguageEnglish
 )
 
-var languages = map[string]Language{
-	"en": languageEnglish,
-	"fr": languageFrench,
+var languages = map[string]localization.Language{
+	"en": localization.LanguageEnglish,
+	"fr": localization.LanguageFrench,
 }
 
 func init() {

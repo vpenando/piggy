@@ -1,29 +1,52 @@
-package main
+package localization
 
 // Language is a type that is used to localize strings.
 type Language int
 
 // Here are the different available languages.
 const (
-	languageEnglish Language = iota + 1
-	languageFrench
+	LanguageEnglish Language = iota + 1
+	LanguageFrench
+)
+
+const (
+	applicationName    = "Piggy"
+	applicationVersion = "0.3.0"
 )
 
 // To satisfy the fmt.Stringer interface.
 func (l Language) String() string {
 	switch l {
-	case languageEnglish:
+	case LanguageEnglish:
 		return "English"
-	case languageFrench:
+	case LanguageFrench:
 		return "Français"
 	}
 	return "???"
 }
 
+// MonthsByLanguage returns the names of the months
+// for a given language.
+func MonthsByLanguage(language Language) []string {
+	return monthsByLanguage[language]
+}
+
+// DateFormatsByLanguage returns the standard date format
+// for a given language.
+func DateFormatsByLanguage(language Language) string {
+	return dateFormatsByLanguage[language]
+}
+
+// ColumnsByLanguage returns the columns header
+// for a given language.
+func ColumnsByLanguage(language Language) TableColumns {
+	return columnsByLanguage[language]
+}
+
 // /!\ TODO - Move everything out in an external config file.
 
 var monthsByLanguage = map[Language][]string{
-	languageEnglish: {
+	LanguageEnglish: {
 		"January",
 		"February",
 		"March",
@@ -37,7 +60,7 @@ var monthsByLanguage = map[Language][]string{
 		"November",
 		"December",
 	},
-	languageFrench: {
+	LanguageFrench: {
 		"Janvier",
 		"Février",
 		"Mars",
@@ -54,19 +77,19 @@ var monthsByLanguage = map[Language][]string{
 }
 
 var dateFormatsByLanguage = map[Language]string{
-	languageEnglish: "2006-01-02",
-	languageFrench:  "02/01/2006",
+	LanguageEnglish: "2006-01-02",
+	LanguageFrench:  "02/01/2006",
 }
 
 var columnsByLanguage = map[Language]TableColumns{
-	languageEnglish: {
+	LanguageEnglish: {
 		Category:     "Category",
 		Date:         "Date",
 		Description:  "Description",
 		Amount:       "Amount",
 		CreationDate: "Created at",
 	},
-	languageFrench: {
+	LanguageFrench: {
 		Category:     "Catégorie",
 		Date:         "Date",
 		Description:  "Description",
@@ -76,7 +99,7 @@ var columnsByLanguage = map[Language]TableColumns{
 }
 
 var homePagesByLanguage = map[Language]HomePageTemplate{
-	languageEnglish: {
+	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
 				Title:   applicationName,
@@ -88,7 +111,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 			Description:  "Description",
 			Amount:       "Amount",
 			CreationDate: "Created at",
-			TableColumns: columnsByLanguage[languageEnglish],
+			TableColumns: ColumnsByLanguage(LanguageEnglish),
 		},
 		Total:                "Total:",
 		Download:             "Download",
@@ -98,7 +121,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 		EditOperationTooltip: "Edit operation",
 		AmountType:           "Expense",
 	},
-	languageFrench: {
+	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
 				Title:   applicationName,
@@ -110,7 +133,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 			Description:  "Description",
 			Amount:       "Montant",
 			CreationDate: "Créé le",
-			TableColumns: columnsByLanguage[languageFrench],
+			TableColumns: ColumnsByLanguage(LanguageFrench),
 		},
 		Total:                "Total :",
 		Download:             "Télécharger",
@@ -123,7 +146,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 }
 
 var editPagesByLanguage = map[Language]EditPageTemplate{
-	languageEnglish: {
+	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
 				Title:   applicationName,
@@ -146,7 +169,7 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 		TooltipDelete:              "Delete",
 		TooltipAddCategory:         "Add Category",
 	},
-	languageFrench: {
+	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
 				Title:   applicationName,
@@ -172,7 +195,7 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 }
 
 var settingsPagesByLanguage = map[Language]SettingsPageTemplate{
-	languageEnglish: {
+	LanguageEnglish: {
 		PageTemplate: PageTemplate{
 			Title:   applicationName,
 			Version: applicationVersion,
@@ -183,7 +206,7 @@ var settingsPagesByLanguage = map[Language]SettingsPageTemplate{
 		SettingServerPort:     "Port:",
 		SettingServerDatabase: "Database:",
 	},
-	languageFrench: {
+	LanguageFrench: {
 		PageTemplate: PageTemplate{
 			Title:   applicationName,
 			Version: applicationVersion,

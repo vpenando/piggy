@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"localization"
 	"log"
 	"time"
 
@@ -53,7 +54,7 @@ func categoryToName(categories []piggy.Category, id int) (s string) {
 }
 
 func writeTitles(file *xl.File, sheet string, report Report) {
-	columns := columnsByLanguage[currentLanguage]
+	columns := localization.ColumnsByLanguage(currentLanguage)
 	titles := map[string]string{
 		"A": columns.Category,
 		"B": columns.Date,
@@ -94,7 +95,7 @@ func export(filename string, report Report) error {
 }
 
 func exportMonth(file *xl.File, report Report, month time.Month) error {
-	sheetName := monthsByLanguage[currentLanguage][month-1]
+	sheetName := localization.MonthsByLanguage(currentLanguage)[month-1]
 	file.NewSheet(sheetName)
 	writeTitles(file, sheetName, report)
 	// TODO - Move this line in an outer scope;
@@ -108,7 +109,7 @@ func exportMonth(file *xl.File, report Report, month time.Month) error {
 	operations := report.operations.Where(func(op piggy.Operation) bool {
 		return op.Date.Month() == month
 	})
-	dateFormat := dateFormatsByLanguage[currentLanguage]
+	dateFormat := localization.DateFormatsByLanguage(currentLanguage)
 	for _, operation := range operations {
 		row := map[string]interface{}{
 			"A": categoryToName(report.categories, operation.CategoryID),
