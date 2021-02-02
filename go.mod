@@ -5,6 +5,7 @@ go 1.15
 replace (
 	github.com/vpenando/piggy/piggy => ./piggy
 	localization => ./localization
+	routing => ./routing
 )
 
 require (
@@ -15,4 +16,5 @@ require (
 	gorm.io/driver/sqlite v1.1.3
 	gorm.io/gorm v1.20.7
 	localization v0.0.0-00010101000000-000000000000
+	routing v0.0.0-00010101000000-000000000000
 )

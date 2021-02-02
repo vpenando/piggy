@@ -1,4 +1,4 @@
-package main
+package routing
 
 import (
 	"bytes"
@@ -10,20 +10,30 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/vpenando/piggy/piggy"
+	"gorm.io/gorm"
 )
 
-func parseVarKey(key string, vars map[string]string) (int, error) {
-	if v, ok := vars[key]; ok {
-		return strconv.Atoi(v)
+var (
+	database            *gorm.DB
+	operationController *piggy.OperationController
+	categoryController  *piggy.CategoryController
+)
+
+func HandleError(w http.ResponseWriter, err error, status int) {
+	if err == nil {
+		return
 	}
-	return 0, errors.New("unexisting key")
+	log.Println("Error:", err)
+	http.Error(w, err.Error(), status)
 }
 
-func parseVarYear(vars map[string]string) (int, error) {
+func ParseVarYear(vars map[string]string) (int, error) {
 	return parseVarKey("year", vars)
 }
 
-func parseVarMonth(vars map[string]string) (time.Month, error) {
+func ParseVarMonth(vars map[string]string) (time.Month, error) {
 	var month time.Month
 	m, err := parseVarKey("month", vars)
 	if err != nil {
@@ -35,17 +45,16 @@ func parseVarMonth(vars map[string]string) (time.Month, error) {
 	return time.Month(m), err
 }
 
-func handleError(w http.ResponseWriter, err error, status int) {
-	if err == nil {
-		return
-	}
-	log.Println("Error:", err)
-	http.Error(w, err.Error(), status)
-}
-
-func serveImage(w http.ResponseWriter, r *http.Request, image string) {
+func ServeImage(w http.ResponseWriter, r *http.Request, image string) {
 	r.Header.Set("Content-Type", "image/png")
 	http.ServeFile(w, r, image)
+}
+
+func parseVarKey(key string, vars map[string]string) (int, error) {
+	if v, ok := vars[key]; ok {
+		return strconv.Atoi(v)
+	}
+	return 0, errors.New("unexisting key")
 }
 
 func isPNG(rawFile []byte) bool {

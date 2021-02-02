@@ -6,6 +6,7 @@ import (
 	"localization"
 	"log"
 	"net/http"
+	"routing"
 	"text/template"
 	"time"
 
@@ -57,18 +58,18 @@ func handleRoutes() {
 	)
 
 	// Operations
-	r.HandleFunc("/operations", getOperations).Methods("GET").Queries(
+	r.HandleFunc("/operations", routing.GetOperations).Methods("GET").Queries(
 		"year", "{year}", // ?year=...
 		"month", "{month}", // &month=...
 	)
-	r.HandleFunc("/operations", postOperations).Methods("POST")
-	r.HandleFunc("/operations", updateOperations).Methods("PUT")
-	r.HandleFunc("/operations", deleteOperations).Methods("DELETE")
+	r.HandleFunc("/operations", routing.PostOperations).Methods("POST")
+	r.HandleFunc("/operations", routing.UpdateOperations).Methods("PUT")
+	r.HandleFunc("/operations", routing.DeleteOperations).Methods("DELETE")
 
 	// Categories
-	r.HandleFunc("/categories", getCategories).Methods("GET")
+	r.HandleFunc("/categories", routing.GetCategories).Methods("GET")
 	r.HandleFunc("/categories/{img}", getCategoryIcon).Methods("GET")
-	r.HandleFunc("/categories", postCategory).Methods("POST")
+	r.HandleFunc("/categories", routing.PostCategory).Methods("POST")
 
 	port := serverPort
 	srv := &http.Server{
@@ -96,12 +97,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	var err error
 	homePageTemplate, err = localization.NewHomePageTemplate(year, month, currentLanguage)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	err = t.ExecuteTemplate(w, "home", homePageTemplate)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 }
@@ -110,24 +111,24 @@ func edit(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	t := template.Must(template.ParseFiles(editTemplate))
 	vars := mux.Vars(r)
-	year, err := parseVarYear(vars)
+	year, err := routing.ParseVarYear(vars)
 	if err != nil {
-		handleError(w, err, http.StatusUnprocessableEntity)
+		routing.HandleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
-	month, err := parseVarMonth(vars)
+	month, err := routing.ParseVarMonth(vars)
 	if err != nil {
-		handleError(w, err, http.StatusUnprocessableEntity)
+		routing.HandleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	editPageTemplate, err = localization.NewEditPageTemplate(year, month, currentLanguage)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	err = t.ExecuteTemplate(w, "edit", editPageTemplate)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 }
@@ -138,12 +139,12 @@ func settings(w http.ResponseWriter, r *http.Request) {
 	var err error
 	settingsPageTemplate, err = localization.NewSettingsPageTemplate(currentLanguage, serverPort, serverDatabase)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	err = t.ExecuteTemplate(w, "settings", settingsPageTemplate)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 }
@@ -152,14 +153,14 @@ func getCategoryIcon(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	vars := mux.Vars(r)
 	img := "./categories/" + vars["img"]
-	serveImage(w, r, img)
+	routing.ServeImage(w, r, img)
 }
 
 func images(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	vars := mux.Vars(r)
 	img := "./images/" + vars["img"]
-	serveImage(w, r, img)
+	routing.ServeImage(w, r, img)
 }
 
 func scripts(w http.ResponseWriter, r *http.Request) {
@@ -191,24 +192,24 @@ const reportFilename = "./reports/report.xlsx"
 func reports(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	vars := mux.Vars(r)
-	year, err := parseVarYear(vars)
+	year, err := routing.ParseVarYear(vars)
 	if err != nil {
-		handleError(w, err, http.StatusUnprocessableEntity)
+		routing.HandleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
-	month, err := parseVarMonth(vars)
+	month, err := routing.ParseVarMonth(vars)
 	if err != nil {
-		handleError(w, err, http.StatusUnprocessableEntity)
+		routing.HandleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	file, err := newReport(year, month)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	err = export(reportFilename, file)
 	if err != nil {
-		handleError(w, err, http.StatusInternalServerError)
+		routing.HandleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	r.Header.Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
