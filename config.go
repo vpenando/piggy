@@ -6,7 +6,7 @@ import (
 
 	"gopkg.in/ini.v1"
 
-	"localization"
+	"github.com/vpenando/piggy/localization"
 )
 
 const (
@@ -48,7 +48,6 @@ func init() {
 	} else {
 		logNilSection(localizationConfigName)
 	}
-	//routing.RegisterCurrentLanguage(currentLanguage)
 }
 
 func tryReadSection(config *ini.File, sectionName string) *ini.Section {

@@ -2,13 +2,13 @@ package routing
 
 import (
 	"fmt"
-	"localization"
 	"log"
 	"time"
 
-	"github.com/vpenando/piggy/piggy"
-
 	xl "github.com/360EntSecGroup-Skylar/excelize"
+
+	"github.com/vpenando/piggy/localization"
+	"github.com/vpenando/piggy/piggy"
 )
 
 // Report is an Excel report that contains each operation

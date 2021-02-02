@@ -3,16 +3,17 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"localization"
 	"log"
 	"net/http"
-	"routing"
 	"text/template"
 	"time"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	"github.com/vpenando/piggy/localization"
+	"github.com/vpenando/piggy/routing"
 )
 
 var (
@@ -20,8 +21,12 @@ var (
 	editPageTemplate     localization.EditPageTemplate
 	settingsPageTemplate localization.SettingsPageTemplate
 	database             *gorm.DB
-	// operationController  *piggy.OperationController
-	// categoryController   *piggy.CategoryController
+)
+
+const (
+	homeTemplate     = "./views/home.html"
+	editTemplate     = "./views/edit.html"
+	settingsTemplate = "./views/settings.html"
 )
 
 func init() {
@@ -30,8 +35,6 @@ func init() {
 	if err != nil {
 		panic(fmt.Sprintf("Failed to init database: %s", err))
 	}
-	// operationController, _ = piggy.NewOperationController(database)
-	// categoryController, _ = piggy.NewCategoryController(database)
 	routing.InitControllers(database)
 }
 
@@ -82,12 +85,6 @@ func handleRoutes() {
 	log.Println("Listening on port", port)
 	log.Fatal(srv.ListenAndServe())
 }
-
-const (
-	homeTemplate     = "./views/home.html"
-	editTemplate     = "./views/edit.html"
-	settingsTemplate = "./views/settings.html"
-)
 
 func home(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)

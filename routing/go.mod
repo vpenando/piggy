@@ -1,6 +1,7 @@
 package routing
 
 replace (
+    github.com/vpenando/piggy/localization => ../localization
     github.com/vpenando/piggy/piggy => ../piggy
 )
 
