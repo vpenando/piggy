@@ -10,8 +10,12 @@ import (
 )
 
 const (
-	configFile = "config.ini"
+	// app infos
+	applicationName    = "PiggyBox"
+	applicationVersion = "v0.2.0"
 
+	// config infos
+	configFile             = "config.ini"
 	serverConfigName       = "server"
 	localizationConfigName = "localization"
 )
