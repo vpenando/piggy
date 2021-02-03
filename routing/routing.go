@@ -32,8 +32,8 @@ var (
 	currentLanguage localization.Language
 	serverPort      string
 
-	operationController *piggy.OperationController
-	categoryController  *piggy.CategoryController
+	operationController piggy.OperationController
+	categoryController  piggy.CategoryController
 )
 
 // InitFromConfig sets the default global informations such as

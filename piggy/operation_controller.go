@@ -9,7 +9,15 @@ import (
 )
 
 // OperationController exposes CRUD functions or operations.
-type OperationController struct {
+type OperationController interface {
+	CreateMany(operations Operations) (Operations, error)
+	ReadAll() (operations Operations, err error)
+	ReadAllBetween(startDate, endDate time.Time) (operations Operations, err error)
+	UpdateMany(operations Operations) (Operations, error)
+	DeleteMany(ids []int) error
+}
+
+type operationController struct {
 	db    *gorm.DB
 	Quiet bool
 }
@@ -21,8 +29,8 @@ type OperationController struct {
 //
 // Example:
 //  controller, err := NewOperationController(database)
-func NewOperationController(db *gorm.DB) (*OperationController, error) {
-	controller := &OperationController{
+func NewOperationController(db *gorm.DB) (OperationController, error) {
+	controller := &operationController{
 		db: db,
 	}
 	err := controller.db.AutoMigrate(&Operation{})
@@ -40,7 +48,7 @@ func NewOperationController(db *gorm.DB) (*OperationController, error) {
 //      operation2,
 //      ...,
 //  })
-func (oc *OperationController) CreateMany(operations Operations) (Operations, error) {
+func (oc *operationController) CreateMany(operations Operations) (Operations, error) {
 	if len(operations) == 0 {
 		return operations, nil
 	}
@@ -63,7 +71,7 @@ func (oc *OperationController) CreateMany(operations Operations) (Operations, er
 //
 // Example:
 //  operations, err := controller.ReadAll()
-func (oc *OperationController) ReadAll() (operations Operations, err error) {
+func (oc *operationController) ReadAll() (operations Operations, err error) {
 	err = oc.db.Find(&operations).Error
 	return
 }
@@ -75,7 +83,7 @@ func (oc *OperationController) ReadAll() (operations Operations, err error) {
 //  startDate := time.Date(year, time.January, 1, 0, 0, 0, 0, time.Local)
 //  endDate := time.Date(year+1, time.January, 1, 0, 0, 0, 0, time.Local)
 //  operations, err := controller.ReadAllBetween(startDate, endDate)
-func (oc *OperationController) ReadAllBetween(startDate, endDate time.Time) (operations Operations, err error) {
+func (oc *operationController) ReadAllBetween(startDate, endDate time.Time) (operations Operations, err error) {
 	err = oc.db.Where("date >= ? AND date < ?", startDate.String(), endDate.String()).Find(&operations).Error
 	return
 }
@@ -89,7 +97,7 @@ func (oc *OperationController) ReadAllBetween(startDate, endDate time.Time) (ope
 //      operation2,
 //      ...,
 //  })
-func (oc *OperationController) UpdateMany(operations Operations) (Operations, error) {
+func (oc *operationController) UpdateMany(operations Operations) (Operations, error) {
 	if len(operations) == 0 {
 		return operations, nil
 	}
@@ -126,7 +134,7 @@ func (oc *OperationController) UpdateMany(operations Operations) (Operations, er
 //
 // Example:
 //  err := controller.DeleteMany([]int{1, 2, 3})
-func (oc *OperationController) DeleteMany(ids []int) error {
+func (oc *operationController) DeleteMany(ids []int) error {
 	if len(ids) == 0 {
 		return nil
 	}

@@ -9,7 +9,13 @@ import (
 
 // CategoryController exposes CRUD functions
 // for categories.
-type CategoryController struct {
+type CategoryController interface {
+	Create(category Category) (Category, error)
+	ReadAll() ([]Category, error)
+	Delete(id int) error
+}
+
+type categoryController struct {
 	db    *gorm.DB
 	Quiet bool
 }
@@ -21,8 +27,8 @@ type CategoryController struct {
 //
 // Example:
 //  controller, err := NewCategoryController(database)
-func NewCategoryController(db *gorm.DB) (*CategoryController, error) {
-	controller := &CategoryController{
+func NewCategoryController(db *gorm.DB) (CategoryController, error) {
+	controller := &categoryController{
 		db: db,
 	}
 	err := controller.db.AutoMigrate(&Category{})
@@ -38,7 +44,7 @@ func NewCategoryController(db *gorm.DB) (*CategoryController, error) {
 //      Name: "My category",
 //      Icon: "my_icon.png",
 //  })
-func (oc *CategoryController) Create(category Category) (Category, error) {
+func (oc *categoryController) Create(category Category) (Category, error) {
 	err := oc.db.Create(&category).Error
 	if err != nil {
 		log.Println("Error: ", err)
@@ -55,7 +61,7 @@ func (oc *CategoryController) Create(category Category) (Category, error) {
 //
 // Example:
 //  categories, err := controller.ReadAll()
-func (oc *CategoryController) ReadAll() ([]Category, error) {
+func (oc *categoryController) ReadAll() ([]Category, error) {
 	var categories []Category
 	if err := oc.db.Find(&categories).Error; err != nil {
 		if !oc.Quiet {
@@ -74,7 +80,7 @@ func (oc *CategoryController) ReadAll() ([]Category, error) {
 // Examples:
 //  err := controller.Delete(42)  // Ok
 //  err := controller.Delete(-1)  // Ok too: this is NOT considered as an error
-func (oc *CategoryController) Delete(id int) error {
+func (oc *categoryController) Delete(id int) error {
 	// If the given category exists in our database:
 	//   1. Actually delete category.
 	//   2: Update operations => if CategoryID == id, we set it to 0.

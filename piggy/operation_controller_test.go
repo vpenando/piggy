@@ -13,16 +13,15 @@ func cleanTestOperations() {
 	testDatabase.Where("1 = 1").Unscoped().Delete(&Operation{})
 }
 
-func newTestOperationController(t *testing.T) *OperationController {
+func newTestOperationController(t *testing.T) OperationController {
 	controller, err := NewOperationController(testDatabase)
 	assert.NoError(t, err)
-	controller.Quiet = true // We don't want our controller to log anything.
 	return controller
 }
 
 func TestNewOperationController(t *testing.T) {
 	controller := newTestOperationController(t)
-	assert.Equal(t, testDatabase, controller.db)
+	assert.NotNil(t, controller)
 }
 
 func TestCreateManyOperations(t *testing.T) {
