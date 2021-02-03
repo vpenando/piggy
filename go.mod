@@ -9,7 +9,7 @@ replace (
 )
 
 require (
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/vpenando/piggy/localization v0.0.0-00010101000000-000000000000
 	github.com/vpenando/piggy/piggy v0.0.0-20201124232141-06292e00dada // indirect
 	github.com/vpenando/piggy/routing v0.0.0-00010101000000-000000000000

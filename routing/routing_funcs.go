@@ -10,23 +10,9 @@ import (
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/vpenando/piggy/piggy"
-	"gorm.io/gorm"
 )
 
-var (
-	//database            *gorm.DB
-	operationController *piggy.OperationController
-	categoryController  *piggy.CategoryController
-)
-
-func InitControllers(db *gorm.DB) {
-	operationController, _ = piggy.NewOperationController(db)
-	categoryController, _ = piggy.NewCategoryController(db)
-}
-
-func HandleError(w http.ResponseWriter, err error, status int) {
+func handleError(w http.ResponseWriter, err error, status int) {
 	if err == nil {
 		return
 	}
@@ -34,11 +20,11 @@ func HandleError(w http.ResponseWriter, err error, status int) {
 	http.Error(w, err.Error(), status)
 }
 
-func ParseVarYear(vars map[string]string) (int, error) {
+func parseVarYear(vars map[string]string) (int, error) {
 	return parseVarKey("year", vars)
 }
 
-func ParseVarMonth(vars map[string]string) (time.Month, error) {
+func parseVarMonth(vars map[string]string) (time.Month, error) {
 	var month time.Month
 	m, err := parseVarKey("month", vars)
 	if err != nil {
@@ -50,7 +36,7 @@ func ParseVarMonth(vars map[string]string) (time.Month, error) {
 	return time.Month(m), err
 }
 
-func ServeImage(w http.ResponseWriter, r *http.Request, image string) {
+func serveImage(w http.ResponseWriter, r *http.Request, image string) {
 	r.Header.Set("Content-Type", "image/png")
 	http.ServeFile(w, r, image)
 }

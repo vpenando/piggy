@@ -15,30 +15,30 @@ import (
 //  * URI params not provided => StatusBadRequest
 //  * Operations reading failure => StatusInternalServerError
 //  * JSON encoding failure => StatusInternalServerError
-func GetOperations(w http.ResponseWriter, r *http.Request) {
+func getOperations(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	vars := mux.Vars(r)
-	year, err := ParseVarYear(vars)
+	year, err := parseVarYear(vars)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
-	month, err := ParseVarMonth(vars)
+	month, err := parseVarMonth(vars)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	startDate := time.Date(year, month, 1, 0, 0, 0, 0, time.Local).UTC()
 	endDate := time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local).UTC()
 	operations, err := operationController.ReadAllBetween(startDate, endDate)
 	if err != nil {
-		HandleError(w, err, http.StatusInternalServerError)
+		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 	serialized, err := json.Marshal(operations)
 	if err != nil {
-		HandleError(w, err, http.StatusInternalServerError)
+		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	r.Header.Set("Content-Type", "application/json")
@@ -48,23 +48,23 @@ func GetOperations(w http.ResponseWriter, r *http.Request) {
 // Possible HTTP errors:
 //  * Invalid request body => StatusUnprocessableEntity
 //  * Operations saving failure => StatusInternalServerError
-func PostOperations(w http.ResponseWriter, r *http.Request) {
+func postOperations(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	var operations []piggy.Operation
 	err = json.Unmarshal(body, &operations)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	log.Println("Creating", len(operations), "operation(s)...")
 	createdOperations, err := operationController.CreateMany(operations)
 	if err != nil {
-		HandleError(w, err, http.StatusInternalServerError)
+		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	serialized, _ := json.Marshal(createdOperations)
@@ -76,22 +76,22 @@ func PostOperations(w http.ResponseWriter, r *http.Request) {
 // Possible HTTP errors:
 //  * Invalid request body => StatusUnprocessableEntity
 //  * Operations saving failure => StatusInternalServerError
-func UpdateOperations(w http.ResponseWriter, r *http.Request) {
+func updateOperations(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	bytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	var operations []piggy.Operation
 	err = json.Unmarshal(bytes, &operations)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	updatedOperations, err := operationController.UpdateMany(operations)
 	if err != nil {
-		HandleError(w, err, http.StatusInternalServerError)
+		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	serialized, _ := json.Marshal(updatedOperations)
@@ -102,21 +102,21 @@ func UpdateOperations(w http.ResponseWriter, r *http.Request) {
 // Possible HTTP errors:
 //  * Invalid request body => StatusUnprocessableEntity
 //  * Operations deletion failure => StatusInternalServerError
-func DeleteOperations(w http.ResponseWriter, r *http.Request) {
+func deleteOperations(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	var ids []int
 	err = json.Unmarshal(body, &ids)
 	if err != nil {
-		HandleError(w, err, http.StatusUnprocessableEntity)
+		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	if err := operationController.DeleteMany(ids); err != nil {
-		HandleError(w, err, http.StatusInternalServerError)
+		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	r.Header.Set("Content-Type", "application/json")

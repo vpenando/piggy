@@ -40,7 +40,7 @@ func NewReport(year int, month time.Month) (Report, error) {
 	return report, err
 }
 
-func Export(filename string, report Report, language localization.Language) error {
+func export(filename string, report Report, language localization.Language) error {
 	file := xl.NewFile()
 	additionalSheets := file.GetSheetMap()
 	for month := time.January; month <= time.December; month++ {
