@@ -1,4 +1,4 @@
-package main
+package localization
 
 // PageTemplate contains the common placeholders used
 // in the application templates.

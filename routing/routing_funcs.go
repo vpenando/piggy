@@ -1,4 +1,4 @@
-package main
+package routing
 
 import (
 	"bytes"
@@ -12,11 +12,12 @@ import (
 	"time"
 )
 
-func parseVarKey(key string, vars map[string]string) (int, error) {
-	if v, ok := vars[key]; ok {
-		return strconv.Atoi(v)
+func handleError(w http.ResponseWriter, err error, status int) {
+	if err == nil {
+		return
 	}
-	return 0, errors.New("unexisting key")
+	log.Println("Error:", err)
+	http.Error(w, err.Error(), status)
 }
 
 func parseVarYear(vars map[string]string) (int, error) {
@@ -35,17 +36,16 @@ func parseVarMonth(vars map[string]string) (time.Month, error) {
 	return time.Month(m), err
 }
 
-func handleError(w http.ResponseWriter, err error, status int) {
-	if err == nil {
-		return
-	}
-	log.Println("Error:", err)
-	http.Error(w, err.Error(), status)
-}
-
 func serveImage(w http.ResponseWriter, r *http.Request, image string) {
 	r.Header.Set("Content-Type", "image/png")
 	http.ServeFile(w, r, image)
+}
+
+func parseVarKey(key string, vars map[string]string) (int, error) {
+	if v, ok := vars[key]; ok {
+		return strconv.Atoi(v)
+	}
+	return 0, errors.New("unexisting key")
 }
 
 func isPNG(rawFile []byte) bool {

@@ -5,11 +5,17 @@ import (
 	"strconv"
 
 	"gopkg.in/ini.v1"
+
+	"github.com/vpenando/piggy/localization"
 )
 
 const (
-	configFile = "config.ini"
+	// app infos
+	applicationName    = "PiggyBox"
+	applicationVersion = "v0.2.0"
 
+	// config infos
+	configFile             = "config.ini"
 	serverConfigName       = "server"
 	localizationConfigName = "localization"
 )
@@ -21,12 +27,12 @@ var (
 	serverDatabase = "piggy.db"
 
 	// Localization config
-	currentLanguage = languageEnglish
+	currentLanguage = localization.LanguageEnglish
 )
 
-var languages = map[string]Language{
-	"en": languageEnglish,
-	"fr": languageFrench,
+var languages = map[string]localization.Language{
+	"en": localization.LanguageEnglish,
+	"fr": localization.LanguageFrench,
 }
 
 func init() {

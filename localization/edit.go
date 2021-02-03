@@ -1,4 +1,4 @@
-package main
+package localization
 
 import (
 	"errors"
@@ -28,11 +28,11 @@ type EditPageTemplate struct {
 	TooltipDelete      string
 }
 
-// newEditPageTemplate returns an EditPageTemplate for given year, month and language.
+// NewEditPageTemplate returns an EditPageTemplate for given year, month and language.
 //
 // Example:
-//  template := newEditPageTemplate(2020, time.December, languageEnglish)
-func newEditPageTemplate(year int, month time.Month, language Language) (EditPageTemplate, error) {
+//  template := NewEditPageTemplate(2020, time.December, languageEnglish)
+func NewEditPageTemplate(year int, month time.Month, language Language) (EditPageTemplate, error) {
 	template, ok := editPagesByLanguage[language]
 	if !ok {
 		return template, errors.New("invalid language")

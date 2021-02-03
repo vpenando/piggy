@@ -1,4 +1,4 @@
-package main
+package routing
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 	"time"
 
 	xl "github.com/360EntSecGroup-Skylar/excelize"
+
+	"github.com/vpenando/piggy/localization"
 	"github.com/vpenando/piggy/piggy"
 )
 
@@ -20,8 +22,8 @@ type Report struct {
 	titles     []string
 }
 
-// newReport returns an Excel report for a given year.
-func newReport(year int, month time.Month) (Report, error) {
+// NewReport returns an Excel report for a given year.
+func NewReport(year int, month time.Month) (Report, error) {
 	startDate := time.Date(year, time.January, 1, 0, 0, 0, 0, time.Local)
 	endDate := time.Date(year+1, time.January, 1, 0, 0, 0, 0, time.Local)
 	operations, err := operationController.ReadAllBetween(startDate, endDate)
@@ -38,6 +40,25 @@ func newReport(year int, month time.Month) (Report, error) {
 	return report, err
 }
 
+func export(filename string, report Report, language localization.Language) error {
+	file := xl.NewFile()
+	additionalSheets := file.GetSheetMap()
+	for month := time.January; month <= time.December; month++ {
+		if err := exportMonth(file, report, month, language); err != nil {
+			return err
+		}
+	}
+	for _, name := range additionalSheets {
+		// Note: There is supposed to be only 1 sheet named "Sheet1" (seen in Excelize source code :)).
+		// However, I wanted to cover the case this convention changes, and provide generic
+		// default sheet deletion, not depending on its name.
+		file.DeleteSheet(name)
+	}
+	currentSheet := int(report.month) + len(additionalSheets)
+	file.SetActiveSheet(currentSheet)
+	return file.SaveAs(filename)
+}
+
 func amountToString(amount float32) string {
 	if amount >= 0 {
 		return fmt.Sprintf("+%.2f€", amount)
@@ -52,8 +73,8 @@ func categoryToName(categories []piggy.Category, id int) (s string) {
 	return categories[id-1].Name
 }
 
-func writeTitles(file *xl.File, sheet string, report Report) {
-	columns := columnsByLanguage[currentLanguage]
+func writeTitles(file *xl.File, sheet string, report Report, language localization.Language) {
+	columns := localization.ColumnsByLanguage(language)
 	titles := map[string]string{
 		"A": columns.Category,
 		"B": columns.Date,
@@ -74,29 +95,10 @@ func writeTitles(file *xl.File, sheet string, report Report) {
 	file.SetCellStyle(sheet, "A1", "E1", style)
 }
 
-func export(filename string, report Report) error {
-	file := xl.NewFile()
-	additionalSheets := file.GetSheetMap()
-	for month := time.January; month <= time.December; month++ {
-		if err := exportMonth(file, report, month); err != nil {
-			return err
-		}
-	}
-	for _, name := range additionalSheets {
-		// Note: There is supposed to be only 1 sheet named "Sheet1" (seen in Excelize source code :)).
-		// However, I wanted to cover the case this convention changes, and provide generic
-		// default sheet deletion, not depending on its name.
-		file.DeleteSheet(name)
-	}
-	currentSheet := int(report.month) + len(additionalSheets)
-	file.SetActiveSheet(currentSheet)
-	return file.SaveAs(filename)
-}
-
-func exportMonth(file *xl.File, report Report, month time.Month) error {
-	sheetName := monthsByLanguage[currentLanguage][month-1]
+func exportMonth(file *xl.File, report Report, month time.Month, language localization.Language) error {
+	sheetName := localization.MonthsByLanguage(language)[month-1]
 	file.NewSheet(sheetName)
-	writeTitles(file, sheetName, report)
+	writeTitles(file, sheetName, report, language)
 	// TODO - Move this line in an outer scope;
 	//        The style doesn't have to be duplicated for each month.
 	evenLineStyle, err := file.NewStyle(evenLineStyleJSON)
@@ -108,7 +110,7 @@ func exportMonth(file *xl.File, report Report, month time.Month) error {
 	operations := report.operations.Where(func(op piggy.Operation) bool {
 		return op.Date.Month() == month
 	})
-	dateFormat := dateFormatsByLanguage[currentLanguage]
+	dateFormat := localization.DateFormatsByLanguage(language)
 	for _, operation := range operations {
 		row := map[string]interface{}{
 			"A": categoryToName(report.categories, operation.CategoryID),

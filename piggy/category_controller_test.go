@@ -25,17 +25,17 @@ func cleanTestCategories() {
 	testDatabase.Where("1 = 1").Unscoped().Delete(&Category{})
 }
 
-func newTestCategoryController(t *testing.T) *CategoryController {
+func newTestCategoryController(t *testing.T) CategoryController {
 	controller, err := NewCategoryController(testDatabase)
 	assert.NoError(t, err)
-	controller.Quiet = true // We don't want our controller to log anything.
+	//controller.Quiet = true // We don't want our controller to log anything.
 	return controller
 }
 
 func TestNewCategoryController(t *testing.T) {
 	controller, err := NewCategoryController(testDatabase)
 	assert.NoError(t, err)
-	assert.Equal(t, testDatabase, controller.db)
+	assert.NotNil(t, controller)
 }
 
 func TestCreateCategory(t *testing.T) {

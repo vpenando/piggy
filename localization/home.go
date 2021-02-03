@@ -1,4 +1,4 @@
-package main
+package localization
 
 import (
 	"errors"
@@ -22,11 +22,11 @@ type HomePageTemplate struct {
 	AmountType           string
 }
 
-// newHomePageTemplate returns an HomePageTemplate for given year, month and language.
+// NewHomePageTemplate returns an HomePageTemplate for given year, month and language.
 //
 // Example:
-//  template := newHomePageTemplate(2020, time.December, languageEnglish)
-func newHomePageTemplate(year int, month time.Month, language Language) (HomePageTemplate, error) {
+//  template := NewHomePageTemplate(2020, time.December, languageEnglish)
+func NewHomePageTemplate(year int, month time.Month, language Language) (HomePageTemplate, error) {
 	template, ok := homePagesByLanguage[language]
 	if !ok {
 		return template, errors.New("invalid language")
