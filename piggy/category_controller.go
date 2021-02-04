@@ -16,8 +16,7 @@ type CategoryController interface {
 }
 
 type categoryController struct {
-	db    *gorm.DB
-	Quiet bool
+	db *gorm.DB
 }
 
 // NewCategoryController returns a new CategoryController
@@ -50,9 +49,7 @@ func (oc *categoryController) Create(category Category) (Category, error) {
 		log.Println("Error: ", err)
 		return category, err
 	}
-	if !oc.Quiet {
-		log.Println("Created category with ID", category.ID)
-	}
+	log.Println("Created category with ID", category.ID)
 	return category, nil
 }
 
@@ -64,9 +61,7 @@ func (oc *categoryController) Create(category Category) (Category, error) {
 func (oc *categoryController) ReadAll() ([]Category, error) {
 	var categories []Category
 	if err := oc.db.Find(&categories).Error; err != nil {
-		if !oc.Quiet {
-			log.Println("Error: ", err)
-		}
+		log.Println("Error: ", err)
 		return nil, err
 	}
 	return categories, nil

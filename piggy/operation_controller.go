@@ -18,8 +18,7 @@ type OperationController interface {
 }
 
 type operationController struct {
-	db    *gorm.DB
-	Quiet bool
+	db *gorm.DB
 }
 
 // NewOperationController returns a new OperationController
@@ -120,9 +119,7 @@ func (oc *operationController) UpdateMany(operations Operations) (Operations, er
 				return err
 			}
 			updated = append(updated, op)
-			if !oc.Quiet {
-				log.Println("Updated operation with ID", op.ID)
-			}
+			log.Println("Updated operation with ID", op.ID)
 		}
 		return nil
 	})
@@ -143,9 +140,7 @@ func (oc *operationController) DeleteMany(ids []int) error {
 			if e := oc.db.Delete(&Operation{}, id).Error; e != nil {
 				return e
 			}
-			if !oc.Quiet {
-				log.Println("Deleted operation with ID", id)
-			}
+			log.Println("Deleted operation with ID", id)
 		}
 		return nil
 	})

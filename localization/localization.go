@@ -1,8 +1,7 @@
 package localization
 
 const (
-	applicationName    = "Piggy"
-	applicationVersion = "0.3.0"
+	applicationName = "Piggy"
 )
 
 // MonthsByLanguage returns the names of the months
@@ -82,8 +81,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
+				Title: applicationName,
 			},
 			Search:       "Search...",
 			Category:     "Category",
@@ -104,8 +102,7 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
+				Title: applicationName,
 			},
 			Search:       "Rechercher...",
 			Category:     "Catégorie",
@@ -129,8 +126,7 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
+				Title: applicationName,
 			},
 			Search:       "Search...",
 			Category:     "Category",
@@ -152,8 +148,7 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
 			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
+				Title: applicationName,
 			},
 			Search:       "Rechercher...",
 			Category:     "Catégorie",
@@ -177,8 +172,7 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 var settingsPagesByLanguage = map[Language]SettingsPageTemplate{
 	LanguageEnglish: {
 		PageTemplate: PageTemplate{
-			Title:   applicationName,
-			Version: applicationVersion,
+			Title: applicationName,
 		},
 		Settings:           "Settings",
 		SettingLanguage:    "Language:",
@@ -187,8 +181,7 @@ var settingsPagesByLanguage = map[Language]SettingsPageTemplate{
 	},
 	LanguageFrench: {
 		PageTemplate: PageTemplate{
-			Title:   applicationName,
-			Version: applicationVersion,
+			Title: applicationName,
 		},
 		Settings:           "Paramètres",
 		SettingLanguage:    "Langue :",
