@@ -1,9 +1,5 @@
 package localization
 
-const (
-	applicationName = "Piggy"
-)
-
 // MonthsByLanguage returns the names of the months
 // for a given language.
 func MonthsByLanguage(language Language) []string {
@@ -80,9 +76,6 @@ var columnsByLanguage = map[Language]TableColumns{
 var homePagesByLanguage = map[Language]HomePageTemplate{
 	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title: applicationName,
-			},
 			Search:       "Search...",
 			Category:     "Category",
 			Date:         "Date",
@@ -101,9 +94,6 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 	},
 	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title: applicationName,
-			},
 			Search:       "Rechercher...",
 			Category:     "Catégorie",
 			Date:         "Date",
@@ -125,9 +115,6 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 var editPagesByLanguage = map[Language]EditPageTemplate{
 	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title: applicationName,
-			},
 			Search:       "Search...",
 			Category:     "Category",
 			Date:         "Date",
@@ -147,9 +134,6 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 	},
 	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title: applicationName,
-			},
 			Search:       "Rechercher...",
 			Category:     "Catégorie",
 			Date:         "Date",
@@ -171,18 +155,12 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 
 var settingsPagesByLanguage = map[Language]SettingsPageTemplate{
 	LanguageEnglish: {
-		PageTemplate: PageTemplate{
-			Title: applicationName,
-		},
 		Settings:           "Settings",
 		SettingLanguage:    "Language:",
 		AvailableLanguages: availableLanguages,
 		SettingServerPort:  "Port:",
 	},
 	LanguageFrench: {
-		PageTemplate: PageTemplate{
-			Title: applicationName,
-		},
 		Settings:           "Paramètres",
 		SettingLanguage:    "Langue :",
 		AvailableLanguages: availableLanguages,
