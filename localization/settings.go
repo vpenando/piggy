@@ -6,8 +6,6 @@ import "errors"
 // 'edit' template. (See views/edit.html)
 // It embeds PageTemplate.
 type SettingsPageTemplate struct {
-	PageTemplate
-
 	// Title
 	Settings string
 

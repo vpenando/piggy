@@ -28,7 +28,6 @@ func cleanTestCategories() {
 func newTestCategoryController(t *testing.T) CategoryController {
 	controller, err := NewCategoryController(testDatabase)
 	assert.NoError(t, err)
-	//controller.Quiet = true // We don't want our controller to log anything.
 	return controller
 }
 

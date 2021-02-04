@@ -1,10 +1,5 @@
 package localization
 
-const (
-	applicationName    = "Piggy"
-	applicationVersion = "0.3.0"
-)
-
 // MonthsByLanguage returns the names of the months
 // for a given language.
 func MonthsByLanguage(language Language) []string {
@@ -81,10 +76,6 @@ var columnsByLanguage = map[Language]TableColumns{
 var homePagesByLanguage = map[Language]HomePageTemplate{
 	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
-			},
 			Search:       "Search...",
 			Category:     "Category",
 			Date:         "Date",
@@ -103,10 +94,6 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 	},
 	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
-			},
 			Search:       "Rechercher...",
 			Category:     "Catégorie",
 			Date:         "Date",
@@ -128,10 +115,6 @@ var homePagesByLanguage = map[Language]HomePageTemplate{
 var editPagesByLanguage = map[Language]EditPageTemplate{
 	LanguageEnglish: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
-			},
 			Search:       "Search...",
 			Category:     "Category",
 			Date:         "Date",
@@ -151,10 +134,6 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 	},
 	LanguageFrench: {
 		TablePageTemplate: TablePageTemplate{
-			PageTemplate: PageTemplate{
-				Title:   applicationName,
-				Version: applicationVersion,
-			},
 			Search:       "Rechercher...",
 			Category:     "Catégorie",
 			Date:         "Date",
@@ -176,20 +155,12 @@ var editPagesByLanguage = map[Language]EditPageTemplate{
 
 var settingsPagesByLanguage = map[Language]SettingsPageTemplate{
 	LanguageEnglish: {
-		PageTemplate: PageTemplate{
-			Title:   applicationName,
-			Version: applicationVersion,
-		},
 		Settings:           "Settings",
 		SettingLanguage:    "Language:",
 		AvailableLanguages: availableLanguages,
 		SettingServerPort:  "Port:",
 	},
 	LanguageFrench: {
-		PageTemplate: PageTemplate{
-			Title:   applicationName,
-			Version: applicationVersion,
-		},
 		Settings:           "Paramètres",
 		SettingLanguage:    "Langue :",
 		AvailableLanguages: availableLanguages,

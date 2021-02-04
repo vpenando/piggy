@@ -2,14 +2,17 @@ package routing
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
 	"time"
 
 	"github.com/gorilla/mux"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
+	"github.com/vpenando/piggy/config"
 	"github.com/vpenando/piggy/localization"
 	"github.com/vpenando/piggy/piggy"
 )
@@ -29,25 +32,22 @@ const (
 )
 
 var (
-	currentLanguage localization.Language
-	serverPort      string
-
 	operationController piggy.OperationController
 	categoryController  piggy.CategoryController
 )
 
-// InitFromConfig sets the default global informations such as
-// language an server port.
-func InitFromConfig(language localization.Language, port string) {
-	currentLanguage = language
-	serverPort = port
-}
+var (
+	database *gorm.DB
+)
 
-// InitControllers initializes the controllers and makes them
-// point to the given database.
-func InitControllers(db *gorm.DB) {
-	operationController, _ = piggy.NewOperationController(db)
-	categoryController, _ = piggy.NewCategoryController(db)
+func init() {
+	var err error
+	database, err = gorm.Open(sqlite.Open(config.ServerDatabase), &gorm.Config{})
+	if err != nil {
+		panic(fmt.Sprintf("Failed to init database: %s", err))
+	}
+	operationController, _ = piggy.NewOperationController(database)
+	categoryController, _ = piggy.NewCategoryController(database)
 }
 
 // HandleRoutes starts listening.
@@ -87,7 +87,7 @@ func HandleRoutes() {
 	r.HandleFunc("/categories/{img}", getCategoryIcon).Methods("GET")
 	r.HandleFunc("/categories", postCategory).Methods("POST")
 
-	port := serverPort
+	port := config.ServerPort
 	srv := &http.Server{
 		Handler: r,
 		Addr:    ":" + port,
@@ -105,7 +105,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	year := time.Now().Year()
 	month := time.Now().Month()
 	var err error
-	homePageTemplate, err = localization.NewHomePageTemplate(year, month, currentLanguage)
+	homePageTemplate, err = localization.NewHomePageTemplate(year, month, config.CurrentLanguage)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
 		return
@@ -131,7 +131,7 @@ func edit(w http.ResponseWriter, r *http.Request) {
 		handleError(w, err, http.StatusUnprocessableEntity)
 		return
 	}
-	editPageTemplate, err = localization.NewEditPageTemplate(year, month, currentLanguage)
+	editPageTemplate, err = localization.NewEditPageTemplate(year, month, config.CurrentLanguage)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
 		return
@@ -147,7 +147,7 @@ func settings(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	t := template.Must(template.ParseFiles(settingsTemplate))
 	var err error
-	settingsPageTemplate, err = localization.NewSettingsPageTemplate(currentLanguage, serverPort)
+	settingsPageTemplate, err = localization.NewSettingsPageTemplate(config.CurrentLanguage, config.ServerPort)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
 		return
@@ -191,7 +191,7 @@ func styles(w http.ResponseWriter, r *http.Request) {
 
 func months(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
-	months := localization.MonthsByLanguage(currentLanguage)
+	months := localization.MonthsByLanguage(config.CurrentLanguage)
 	serialized, _ := json.Marshal(months)
 	w.WriteHeader(http.StatusOK)
 	w.Write(serialized)
@@ -215,7 +215,7 @@ func reports(w http.ResponseWriter, r *http.Request) {
 		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
-	err = export(reportFilename, file, currentLanguage)
+	err = export(reportFilename, file, config.CurrentLanguage)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
 		return
