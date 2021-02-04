@@ -30,7 +30,7 @@
     </div>
     <div id="new-operation-modal" class="modal-background">
         <div class="modal-content">
-            <span class="modal" onclick="closeEditionModal()">&times;</span>
+            <span class="modal" onclick="closeNewOperationModal()">&times;</span>
             <label class="modal-title">{{ .NewOperationTitle }}</label>
             <div>
                 <table class="modal-table">
@@ -229,7 +229,7 @@
                 .send(JSON.stringify([currentOperation]));
         }
 
-        function openNewOperationModal(){
+        function openNewOperationModal() {
             newOperationCategoryCell.innerHTML = new ComboBox(editOperationCategoryId, 'category-select', table.categories.map(c => c.name)).toHTML();
             newOperationDateCell.value = formatDateSelectorContent(new Date());
             newOperationDescCell.value = '';
@@ -238,7 +238,7 @@
             newOperationModal.style.display = 'block';
         }
 
-        function closeNewOperationModal(){
+        function closeNewOperationModal() {
             newOperationModal.style.display = 'none';
         }
 
