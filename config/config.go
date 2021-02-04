@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"log"
@@ -12,7 +12,7 @@ import (
 const (
 	// app infos
 	applicationName    = "PiggyBox"
-	applicationVersion = "v0.2.0"
+	applicationVersion = "v0.4.0"
 
 	// config infos
 	configFile             = "config.ini"
@@ -23,11 +23,11 @@ const (
 // Default config.
 var (
 	// Server side config
-	serverPort     = "8081"
-	serverDatabase = "piggy.db"
+	ServerPort     = "8081"
+	ServerDatabase = "piggy.db"
 
 	// Localization config
-	currentLanguage = localization.LanguageEnglish
+	CurrentLanguage = localization.LanguageEnglish
 )
 
 var languages = map[string]localization.Language{
@@ -65,7 +65,7 @@ func tryReadSection(config *ini.File, sectionName string) *ini.Section {
 func readServerConfig(section *ini.Section) {
 	if databaseKey := section.Key("database"); databaseKey.String() != "" {
 		log.Printf("Read database '%s' from config file.", databaseKey.String())
-		serverDatabase = databaseKey.String()
+		ServerDatabase = databaseKey.String()
 	} else {
 		logKeyNotFound("database")
 	}
@@ -75,7 +75,7 @@ func readServerConfig(section *ini.Section) {
 			return
 		}
 		log.Printf("Read port '%s' from config file.", portKey.String())
-		serverPort = portKey.String()
+		ServerPort = portKey.String()
 	} else {
 		logKeyNotFound("port")
 	}
@@ -85,7 +85,7 @@ func readLocalizationConfig(section *ini.Section) {
 	if languageKey := section.Key("language"); languageKey.String() != "" {
 		if languageValue, ok := languages[languageKey.String()]; ok {
 			log.Printf("Read language '%s' from config file.", languageKey.String())
-			currentLanguage = languageValue
+			CurrentLanguage = languageValue
 		} else {
 			logNotSupportedValue("language", languageKey.String())
 		}
