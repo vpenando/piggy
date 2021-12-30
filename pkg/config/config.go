@@ -6,7 +6,7 @@ import (
 
 	"gopkg.in/ini.v1"
 
-	"github.com/vpenando/piggy/localization"
+	"github.com/vpenando/piggy/pkg/localization"
 )
 
 const (

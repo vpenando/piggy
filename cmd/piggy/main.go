@@ -5,7 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/vpenando/piggy/routing"
+	"github.com/vpenando/piggy/pkg/routing"
 )
 
 func main() {

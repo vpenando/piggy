@@ -1,20 +1,12 @@
-module main
+module github.com/vpenando/piggy
 
 go 1.15
 
-replace (
-	github.com/vpenando/piggy/config => ./config
-	github.com/vpenando/piggy/localization => ./localization
-	github.com/vpenando/piggy/piggy => ./piggy
-	github.com/vpenando/piggy/routing => ./routing
-)
-
 require (
-	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/vpenando/piggy/config v0.0.0-00010101000000-000000000000
-	github.com/vpenando/piggy/localization v0.0.0-00010101000000-000000000000
-	github.com/vpenando/piggy/piggy v0.0.0-20201124232141-06292e00dada // indirect
-	github.com/vpenando/piggy/routing v0.0.0-00010101000000-000000000000
+	github.com/360EntSecGroup-Skylar/excelize v1.4.1
+	github.com/gorilla/mux v1.8.0
+	github.com/stretchr/testify v1.2.3-0.20181224173747-660f15d67dbb
+	gopkg.in/ini.v1 v1.66.2
 	gorm.io/driver/sqlite v1.1.3
 	gorm.io/gorm v1.20.7
 )

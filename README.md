@@ -32,3 +32,5 @@ Et voilà!
 ## Custom build
 
 If you want to build the application by yourself, run the following command: `go build -o <APPLICATION_NAME>`.
+
+On Windows, just run `build.bat`.

@@ -12,9 +12,9 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"github.com/vpenando/piggy/config"
-	"github.com/vpenando/piggy/localization"
-	"github.com/vpenando/piggy/piggy"
+	"github.com/vpenando/piggy/pkg/config"
+	"github.com/vpenando/piggy/pkg/localization"
+	"github.com/vpenando/piggy/pkg/piggy"
 )
 
 var (

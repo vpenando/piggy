@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/vpenando/piggy/piggy"
+	"github.com/vpenando/piggy/pkg/piggy"
 )
 
 // Possible HTTP errors:

@@ -7,8 +7,8 @@ import (
 
 	xl "github.com/360EntSecGroup-Skylar/excelize"
 
-	"github.com/vpenando/piggy/localization"
-	"github.com/vpenando/piggy/piggy"
+	"github.com/vpenando/piggy/pkg/localization"
+	"github.com/vpenando/piggy/pkg/piggy"
 )
 
 // Report is an Excel report that contains each operation

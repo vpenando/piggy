@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/vpenando/piggy/piggy"
+	"github.com/vpenando/piggy/pkg/piggy"
 )
 
 func getCategories(w http.ResponseWriter, r *http.Request) {
