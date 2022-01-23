@@ -30,12 +30,7 @@ var (
 	CurrentLanguage = localization.LanguageEnglish
 )
 
-var languages = map[string]localization.Language{
-	"en": localization.LanguageEnglish,
-	"fr": localization.LanguageFrench,
-}
-
-func init() {
+func ReadConfig() {
 	config, err := ini.Load(configFile)
 	if err != nil {
 		log.Printf("Failed to open config file '%s': %s.\n", configFile, err)
@@ -79,6 +74,11 @@ func readServerConfig(section *ini.Section) {
 	} else {
 		logKeyNotFound("port")
 	}
+}
+
+var languages = map[string]localization.Language{
+	"en": localization.LanguageEnglish,
+	"fr": localization.LanguageFrench,
 }
 
 func readLocalizationConfig(section *ini.Section) {
