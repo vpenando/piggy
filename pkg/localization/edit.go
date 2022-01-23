@@ -6,7 +6,7 @@ import (
 )
 
 // EditPageTemplate contains every needed placeholder for the
-// 'edit' template. (See views/edit.html)
+// 'edit' template. (See static/views/edit.html)
 // It embeds PageTemplate.
 type EditPageTemplate struct {
 	TablePageTemplate

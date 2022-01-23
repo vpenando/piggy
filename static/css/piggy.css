@@ -113,8 +113,8 @@
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-    background-color: #C84C6E;
-    color: white;
+    /* background-color: #C84C6E; */
+    color: #C84C6E;
     width: 33%;
 }
 

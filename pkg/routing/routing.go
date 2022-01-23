@@ -24,9 +24,9 @@ var (
 )
 
 const (
-	homeTemplate     = "./views/home.html"
-	editTemplate     = "./views/edit.html"
-	settingsTemplate = "./views/settings.html"
+	homeTemplate     = "./static/views/home.html"
+	editTemplate     = "./static/views/edit.html"
+	settingsTemplate = "./static/views/settings.html"
 
 	reportFilename = "./reports/report.xlsx"
 )
@@ -62,9 +62,9 @@ func HandleRoutes() {
 	r.HandleFunc("/settings", settings).Methods("GET")
 
 	// Resources
-	r.HandleFunc("/css/{sheet}", styles).Methods("GET")
-	r.HandleFunc("/images/{img}", images).Methods("GET")
-	r.HandleFunc("/scripts/{script}", scripts).Methods("GET")
+	r.HandleFunc("/static/css/{sheet}", styles).Methods("GET")
+	r.HandleFunc("/static/images/{img}", images).Methods("GET")
+	r.HandleFunc("/static/scripts/{script}", scripts).Methods("GET")
 
 	// Misc
 	r.HandleFunc("/months", months).Methods("GET")
@@ -169,7 +169,7 @@ func getCategoryIcon(w http.ResponseWriter, r *http.Request) {
 func images(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	vars := mux.Vars(r)
-	img := "./images/" + vars["img"]
+	img := "./static/images/" + vars["img"]
 	serveImage(w, r, img)
 }
 
@@ -177,7 +177,7 @@ func scripts(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	r.Header.Set("Content-Type", "application/javascript")
 	vars := mux.Vars(r)
-	script := "./scripts/" + vars["script"]
+	script := "./static/scripts/" + vars["script"]
 	http.ServeFile(w, r, script)
 }
 
@@ -185,7 +185,7 @@ func styles(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL)
 	r.Header.Set("Content-Type", "text/css")
 	vars := mux.Vars(r)
-	sheet := "./css/" + vars["sheet"]
+	sheet := "./static/css/" + vars["sheet"]
 	http.ServeFile(w, r, sheet)
 }
 

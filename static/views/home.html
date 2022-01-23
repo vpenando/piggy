@@ -3,29 +3,29 @@
 <html>
 <head>
     <title>Piggy</title>
-    <link rel="icon" href="/images/favicon.ico">
-    <link rel="stylesheet" href="/css/home.css">
-    <link rel="stylesheet" href="/css/piggy.css">
-    <script src="/scripts/combobox.js"></script>
-    <script src="/scripts/div.js"></script>
-    <script src="/scripts/image.js"></script>
-    <script src="/scripts/input.js"></script>
-    <script src="/scripts/label.js"></script>
-    <script src="/scripts/request.js"></script>
-    <script src="/scripts/table.js"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/piggy.css">
+    <script src="/static/scripts/combobox.js"></script>
+    <script src="/static/scripts/div.js"></script>
+    <script src="/static/scripts/image.js"></script>
+    <script src="/static/scripts/input.js"></script>
+    <script src="/static/scripts/label.js"></script>
+    <script src="/static/scripts/request.js"></script>
+    <script src="/static/scripts/table.js"></script>
 </head>
 <body>
     <div id="head-banner">
-        <a href="/"><img id="icon" src="/images/icn_piggy.png" /></a>
+        <a href="/"><img id="icon" src="/static/images/icn_piggy.png" /></a>
         <div class="prev-month" onclick="goToPreviousMonth()"></div>
         <label id="month"></label>
         <div class="next-month" onclick="goToNextMonth()"></div>
         <label id="total">{{ .Total }}</label>
         <div id="buttons">
-            <a id="add" title="new" onClick="openNewOperationModal()"><img class="button" src="/images/btn_add.png"></a>
-            <a id="edit" title="{{ .EditMode }}"><img class="button" src="/images/btn_edit.png"></a>
-            <a id="report" download="report.xlsx"><img class="button" src="/images/btn_download.png"></a>
-            <a id="settings" href="/settings"><img class="button" src="/images/btn_settings.png"></a>
+            <a id="add" title="new" onClick="openNewOperationModal()"><img class="button" src="/static/images/btn_add.png"></a>
+            <a id="edit" title="{{ .EditMode }}"><img class="button" src="/static/images/btn_edit.png"></a>
+            <a id="report" download="report.xlsx"><img class="button" src="/static/images/btn_download.png"></a>
+            <a id="settings" href="/settings"><img class="button" src="/static/images/btn_settings.png"></a>
         </div>
     </div>
     <div id="new-operation-modal" class="modal-background">
@@ -35,16 +35,8 @@
             <div>
                 <table class="modal-table">
                     <tr>
-                        <th>{{ .Category }}</th>
-                        <td><select id="new-operation-category" /></td>
-                    </tr>
-                    <tr>
                         <th>{{ .Date }}</th>
                         <td><input type="date" id="new-operation-date"></td>
-                    </tr>
-                    <tr>
-                        <th>{{ .Description }}</th>
-                        <td><input id="new-operation-desc" maxlength="25"></td>
                     </tr>
                     <tr>
                         <th>{{ .Amount }}</th>
@@ -53,6 +45,14 @@
                             <input type="checkbox" id="amount-type">
                             <label>{{ .AmountType }}</label>
                         </td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Category }}</th>
+                        <td><select id="new-operation-category" /></td>
+                    </tr>
+                    <tr>
+                        <th>{{ .Description }}</th>
+                        <td><input id="new-operation-desc" maxlength="25"></td>
                     </tr>
                 </table>
                 <button id="modal-ok-button" onclick="newOperation()">OK</button>
@@ -91,7 +91,7 @@
         </div>
     </div>
     <input id="search-bar" placeholder="{{ .Search }}" autofocus />
-    <script src="/scripts/piggy.js"></script>
+    <script src="/static/scripts/piggy.js"></script>
     <table id="main-table">
         <thead>
             <tr>
@@ -180,7 +180,7 @@
 
             creationDateCell.innerHTML = new Div([
                 new Label(formatDateCell(item.operation.creation_date), 'cell-content').toHTML(),
-                new HiddenImageInput('/images/icn_edit.png', 'openEditionModal('+index+')', '{{ .EditOperationTooltip }}', 'editItem'+index).toHTML()
+                new HiddenImageInput('/static/images/icn_edit.png', 'openEditionModal('+index+')', '{{ .EditOperationTooltip }}', 'editItem'+index).toHTML()
             ]).toHTML();
             const editImageInput = document.getElementById('editItem'+index);
             

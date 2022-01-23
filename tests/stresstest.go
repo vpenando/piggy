@@ -78,9 +78,9 @@ var testCases = []testCase{
 	{get, "/settings", http.StatusOK},
 
 	// Resources
-	{get, "/css/piggy.css", http.StatusOK},
-	{get, "/images/favicon.ico", http.StatusOK},
-	{get, "/scripts/piggy.js", http.StatusOK},
+	{get, "/static/css/piggy.css", http.StatusOK},
+	{get, "/static/images/favicon.ico", http.StatusOK},
+	{get, "/static/scripts/piggy.js", http.StatusOK},
 
 	// Misc
 	{get, "/months", http.StatusOK},

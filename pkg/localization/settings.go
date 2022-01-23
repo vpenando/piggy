@@ -3,7 +3,7 @@ package localization
 import "errors"
 
 // SettingsPageTemplate contains every needed placeholder for the
-// 'edit' template. (See views/edit.html)
+// 'edit' template. (See static/views/edit.html)
 // It embeds PageTemplate.
 type SettingsPageTemplate struct {
 	// Title

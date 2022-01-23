@@ -6,7 +6,7 @@ import (
 )
 
 // HomePageTemplate contains every needed placeholder for the
-// 'edit' template. (See views/home.html)
+// 'edit' template. (See static/views/home.html)
 // It embeds PageTemplate.
 type HomePageTemplate struct {
 	TablePageTemplate

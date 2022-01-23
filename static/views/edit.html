@@ -3,23 +3,23 @@
 <html>
 <head>
     <title>Piggy</title>
-    <link rel="icon" href="/images/favicon.ico">
-    <link rel="stylesheet" href="/css/edit.css">
-    <link rel="stylesheet" href="/css/piggy.css">
-    <script type="text/javascript" src="/scripts/combobox.js"></script>
-    <script type="text/javascript" src="/scripts/input.js"></script>
-    <script type="text/javascript" src="/scripts/request.js"></script>
-    <script type="text/javascript" src="/scripts/table.js"></script>
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="/static/css/edit.css">
+    <link rel="stylesheet" href="/static/css/piggy.css">
+    <script type="text/javascript" src="/static/scripts/combobox.js"></script>
+    <script type="text/javascript" src="/static/scripts/input.js"></script>
+    <script type="text/javascript" src="/static/scripts/request.js"></script>
+    <script type="text/javascript" src="/static/scripts/table.js"></script>
 </head>
 <body>
     <div id="head-banner">
         <a href="/">
-            <img id="icon" src="/images/icn_piggy.png" />
+            <img id="icon" src="/static/images/icn_piggy.png" />
         </a>
         <label id="month"></label>
         <div id="buttons">
-            <input class="button" type="image" src="/images/btn_save.png" onclick="saveChanges()" title="Enregistrer" />
-            <input class="button" type="image" src="/images/btn_add.png" onclick="addOperation()" title="{{ .TooltipAdd }}" />
+            <input class="button" type="image" src="/static/images/btn_save.png" onclick="saveChanges()" title="Enregistrer" />
+            <input class="button" type="image" src="/static/images/btn_add.png" onclick="addOperation()" title="{{ .TooltipAdd }}" />
         </div>
     </div>
     <div id="add-category-modal" class="modal-background">
@@ -47,7 +47,7 @@
             <tr>
                 <th class="table-header">
                     {{ .Category }} 
-                    <input id="new-category-button" type="image" src="/images/btn_add.png" onclick="openNewCategoryModal()" title="{{ .TooltipAddCategory }}" width="18" height="18"/>
+                    <input id="new-category-button" type="image" src="/static/images/btn_add.png" onclick="openNewCategoryModal()" title="{{ .TooltipAddCategory }}" width="18" height="18"/>
                 </th>
                 <th class="table-header">{{ .Date }}</th>
                 <th class="table-header">{{ .Description }}</th>
@@ -57,7 +57,7 @@
         </thead>
         <tbody id="main-table-body" />
     </table>
-    <script type="text/javascript" src="/scripts/piggy.js"></script>
+    <script type="text/javascript" src="/static/scripts/piggy.js"></script>
     <script>
         const date = new Date('{{ .Year }}', '{{ .MonthIndex }}');
         const mainTableBody = document.getElementById('main-table-body');
@@ -166,7 +166,7 @@
             });
 
             actionsCell.innerHTML += new ImageInput(
-                '/images/icn_delete.png',
+                '/static/images/icn_delete.png',
                 'deleteItem('+index+')',
                 '{{ .TooltipDelete }}'
             ).toHTML();
