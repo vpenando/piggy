@@ -113,7 +113,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 	err = t.ExecuteTemplate(w, "home", homePageTemplate)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
-		return
 	}
 }
 
@@ -139,7 +138,6 @@ func edit(w http.ResponseWriter, r *http.Request) {
 	err = t.ExecuteTemplate(w, "edit", editPageTemplate)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
-		return
 	}
 }
 
@@ -155,7 +153,6 @@ func settings(w http.ResponseWriter, r *http.Request) {
 	err = t.ExecuteTemplate(w, "settings", settingsPageTemplate)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
-		return
 	}
 }
 
