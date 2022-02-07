@@ -28,7 +28,7 @@ const (
 	editTemplate     = "./static/views/edit.html"
 	settingsTemplate = "./static/views/settings.html"
 
-	reportFilename = "./reports/report.xlsx"
+	reportFilename = "./reports/report-%d-%02d.xlsx"
 )
 
 var (
@@ -212,11 +212,12 @@ func reports(w http.ResponseWriter, r *http.Request) {
 		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
-	err = export(reportFilename, file, config.CurrentLanguage)
+	fileName := fmt.Sprintf(reportFilename, year, month)
+	err = export(fileName, file, config.CurrentLanguage)
 	if err != nil {
 		handleError(w, err, http.StatusInternalServerError)
 		return
 	}
 	r.Header.Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	http.ServeFile(w, r, reportFilename)
+	http.ServeFile(w, r, fileName)
 }
