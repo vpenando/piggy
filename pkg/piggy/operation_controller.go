@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// OperationController exposes CRUD functions or operations.
+// OperationController exposes CRUD functions for operations.
 type OperationController interface {
 	CreateMany(operations Operations) (Operations, error)
 	ReadAll() (operations Operations, err error)
